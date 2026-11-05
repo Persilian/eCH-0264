@@ -27,11 +27,7 @@ package "Referenzdaten" as REF {
   class "Anforderung" as ANF {
     grundlage : Text
   }
-  class "Kontrollbereich" as KB
-  class "Rubrik" as RUB {
-    kontrollgrund : Text [0..*]
-  }
-  class "Gruppe" as GRP
+  class "Konzept" as KZ <<skos:Concept>>
   class "Kontrollpunkt" as KP {
     pointID : UUID
     name : Text 
@@ -44,13 +40,10 @@ package "Referenzdaten" as REF {
     ...
   }
 
-  ' Gliederung: Kontrollbereich > Rubrik > Gruppe (beliebig tief) > Kontrollpunkt;
-  ' ein Kontrollpunkt kann auch direkt in einer Rubrik liegen
-  KB "1" *-- "0..*" RUB
-  RUB "0..1" *-- "0..*" GRP
-  GRP "0..1" *-- "0..*" GRP : Untergruppe
-  RUB "0..1" *-- "0..*" KP
-  GRP "0..1" *-- "0..*" KP
+  ' Gliederung: ein Kontrollpunkt ist einem Konzept zugeordnet; Konzepte sind
+  ' über skos:broader beliebig tief verschachtelt (z. B. Kontrollbereich > Rubrik > Gruppe)
+  KZ "0..*" --> "0..1" KZ : skos:broader
+  KP "0..*" --> "1" KZ : zugeordnet
 
   ANF --> KP
   KP -right-> "1..*" ERG : möglich

@@ -242,9 +242,8 @@ Es baut auf den Begriffen des Fachglossars (@sec-glossary) auf und leitet sich a
 Das konzeptionelle Datenmodell (@fig-conceptual-model) unterscheidet zwei Arten von Daten:
 
 - **Referenzdaten** legen fest, was kontrolliert wird.
-  Ein Kontrollbereich gliedert sich in Rubriken, eine Rubrik in Gruppen, die beliebig tief verschachtelt sein können.
-  Ein Kontrollpunkt liegt entweder in einer Gruppe oder direkt in einer Rubrik.
-  Zu einer Rubrik können Kontrollgründe angegeben werden.
+  Jeder Kontrollpunkt ist einem Konzept (`skos:Concept`) zugeordnet.
+  Konzepte verweisen über `skos:broader` auf ein übergeordnetes Konzept und können so beliebig tief verschachtelt werden, zum Beispiel als Kontrollbereich, Rubrik und Gruppe.
   Jeder Kontrollpunkt stützt sich auf Anforderungen und legt mindestens ein mögliches Ergebnis fest.
 - **Transaktionsdaten** entstehen bei einer Kontrolle und fliessen zwischen den Systemen.
   Eine Kontrolle hält fest, wann sie stattgefunden hat, welche örtliche Einheit kontrolliert wurde und zu welcher rechtlichen Einheit diese gehört, sowie gegebenenfalls die Kontrollperson und die Kontrollstelle.
@@ -254,6 +253,34 @@ Stammdaten werden nicht modelliert.
 Die Kontrolle verweist auf die örtliche Einheit mit der BUR-Nummer und auf die rechtliche Einheit mit der Unternehmens-Identifikationsnummer (UID).
 
 ![Konzeptionelles Datenmodell](assets/img/conceptual_model.svg){#fig-conceptual-model width="80%"}
+
+### Modellierungsentscheide {#sec-modelling-decisions}
+
+#### Gliederung der Kontrollpunkte mit `skos:Concept`
+
+Kontrollpunkte werden heute in Kontrollbereiche, Rubriken und Gruppen gegliedert.
+Das Datenmodell bildet diese Ebenen nicht als eigene Klassen ab.
+Stattdessen ist jeder Kontrollpunkt einem Konzept zugeordnet, und jedes Konzept kann einem übergeordneten Konzept angehören.
+So entsteht ein Baum, der beliebig viele Ebenen haben kann.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Kataloge sind unterschiedlich aufgebaut.**
+  Die Kataloge von Bund, Kantonen und privaten Labels haben nicht alle die gleichen Ebenen.
+  Manche haben mehr, andere weniger, manche nennen sie anders.
+  Mit einer einzigen, verschachtelbaren Struktur passen alle Kataloge ins gleiche Modell, ohne dass es geändert werden muss.
+- **Das Modell wird einfacher.**
+  Ein Kontrollpunkt hängt immer an genau einem Konzept.
+  Es braucht keine Sonderregel mehr, ob er in einer Gruppe oder direkt in einer Rubrik liegt.
+- **Kontrollpunkte verschiedener Kataloge lassen sich verknüpfen.**
+  Mit SKOS kann man festhalten, dass ein Punkt eines privaten Labels einem Punkt des Bundes entspricht.
+  Das ist eine Voraussetzung, damit Kontrolldaten zwischen den Systemen weiterverwendet werden können.
+- **SKOS ist ein bewährter Standard.**
+  Er bietet Bezeichnungen in mehreren Sprachen, Codes und Versionen bereits an.
+  Auch das Fachglossar (@sec-glossary) ist mit SKOS modelliert.
+
+Dafür sind die Ebenen im Modell nicht mehr fest benannt.
+Regeln, die nur für eine bestimmte Ebene gelten, werden erst in der technischen Umsetzung festgelegt.
 
 ## Logisches Datenmodell {#sec-logical-model}
 
