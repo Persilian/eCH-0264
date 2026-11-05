@@ -176,7 +176,7 @@ Label-Organisationen können dann nicht beurteilen, ob ihre spezifischen Anforde
 
 **Identifikation der Kontrollobjekte.**
 Kontrollergebnisse beziehen sich je nach Bereich auf den Betrieb, die Produktionsstätte oder die Tierhaltung.
-Label-Organisationen identifizieren ihre Mitglieder teilweise nur über die TVD-Nummer, agridata.ch dagegen über UID und BUR-Nummer; nicht bei jeder Tierhaltung ist eine TVD-Nummer hinterlegt.
+Label-Organisationen identifizieren ihre Mitglieder teilweise nur über die TVD-Nummer, agridata.ch dagegen über die Unternehmens-Identifikationsnummer (UID) [@uid-register] und die BUR-Nummer [@bur; @digiagrifood-stammdaten]; nicht bei jeder Tierhaltung ist eine TVD-Nummer hinterlegt.
 
 **Limitierte historische Daten und Aktualität.**
 Über agridata.ch sind höchstens die Kontrollen der letzten vier Kalenderjahre verfügbar, der Kontrollrhythmus beträgt aber bis zu acht Jahre.

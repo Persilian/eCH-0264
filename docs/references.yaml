@@ -285,3 +285,35 @@ references:
     Landwirtschaft (Direktzahlungsverordnung, DZV; SR 910.13)
   type: book
   url: "https://www.fedlex.admin.ch/eli/cc/2013/765/de"
+
+- author:
+  - literal: Bundesamt für Statistik (BFS)
+  id: bur
+  citation-label: BFS26a
+  issued: 2026
+  title: Betriebs- und Unternehmensregister (BUR)
+  url: "https://www.bfs.admin.ch/de/unternehmensregister-bur"
+
+- author:
+  - literal: Bundesamt für Statistik (BFS)
+  id: uid-register
+  citation-label: BFS26b
+  issued: 2026
+  title: UID-Register
+  url: "https://www.uid.admin.ch/"
+
+- author:
+  - literal: DigiAgriFoodCH
+  id: digiagrifood-stammdaten
+  citation-label: DAF26
+  issued: 2026
+  title: Stammdaten -- Digitalisierung des Schweizer Agrar- und Ernährungssektors
+  url: "https://digiagrifood.ch/digiknowhow/stammdaten/"
+
+- author:
+  - literal: Schema.org
+  id: schemaorg
+  citation-label: Sch26
+  issued: 2026
+  title: Schema.org Vocabulary
+  url: "https://schema.org/"
