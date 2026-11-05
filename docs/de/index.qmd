@@ -250,7 +250,7 @@ Es unterscheidet zwei Arten von Daten:
   Ein Programm, zum Beispiel ein Direktzahlungsprogramm wie RAUS oder BTS, ist in einem Regelwerk festgelegt und umfasst die Anforderungen, zu deren Einhaltung sich ein Betrieb mit der Anmeldung verpflichtet.
   Ein Kontrollpunkt prüft eine oder mehrere Anforderungen und wird von einer Organisation herausgegeben.
   Alle Anforderungen eines Kontrollpunkts stammen aus Regelwerken mit derselben Rechtsnatur.
-  Der Kontrollpunkt legt mindestens ein mögliches Ergebnis fest.
+  Der Kontrollpunkt legt mindestens ein mögliches Ergebnis fest, zum Beispiel einen vordefinierten Mangel.
   Jeder Kontrollpunkt ist einem Gliederungselement zugeordnet.
   Gliederungselemente können einem übergeordneten Gliederungselement angehören und so beliebig tief verschachtelt werden, zum Beispiel als Kontrollbereich, Rubrik und Gruppe.
   Jede Herausgeberin veröffentlicht ihre gültigen Kontrollpunkte in einem Kontrollpunktkatalog, zum Beispiel das BLW jährlich in der Masterliste oder eine Label-Organisation bei jeder Änderung ihrer Richtlinien.
@@ -258,9 +258,10 @@ Es unterscheidet zwei Arten von Daten:
   Ein neuer Kontrollpunkt kann einen oder mehrere frühere Kontrollpunkte derselben Herausgeberin ersetzen.
   Ein Kontrollpunkt kann eine Qualifikation erfordern, die eine Person besitzen muss, um ihn abschliessend zu prüfen.
   Personen gehören einer oder mehreren Organisationen an, zum Beispiel einer Kontrollstelle oder einem kantonalen Veterinäramt.
-- **Transaktionsdaten** entstehen bei einer Kontrolle und fliessen zwischen den Systemen.
+- **Transaktionsdaten** entstehen bei einer Kontrolle oder einer Anmeldung und fliessen zwischen den Systemen.
   Eine Kontrolle hält fest, wann sie stattgefunden hat, welche örtliche Einheit kontrolliert wurde und zu welcher rechtlichen Einheit diese gehört, welche Personen sie durchgeführt haben und gegebenenfalls welche Organisation als Kontrollstelle beauftragt war.
-  Für jeden kontrollierten Kontrollpunkt wird eine tatsächliche Beobachtung mit dem festgestellten Ergebnis erfasst, bei Bedarf ergänzt mit einem Bild und einer Beschreibung der Abweichung.
+  Für jeden kontrollierten Kontrollpunkt wird eine tatsächliche Beobachtung erfasst.
+  Sie verweist auf ein vordefiniertes mögliches Ergebnis oder beschreibt eine Abweichung frei, bei Bedarf ergänzt mit einer Menge, zum Beispiel der betroffenen Fläche, und einem Bild.
   Jede Beobachtung hält fest, welche Person sie festgestellt hat.
   Eine Beobachtung kann eine falsch erfasste Beobachtung korrigieren oder auf eine frühere Beobachtung folgen, zum Beispiel bei einer Nachkontrolle.
   Eine Anmeldung hält fest, dass sich ein Betrieb für ein Beitragsjahr für ein Programm angemeldet hat und wann er dies getan hat.
@@ -272,8 +273,12 @@ Kontrolle und Anmeldung verweisen auf die örtliche Einheit mit der Nummer des B
 
 ### Modellierungsentscheide {#sec-modelling-decisions}
 
+Die folgenden Abschnitte begründen die wichtigsten Entscheide.
+Neben jedem Entscheid steht der Ausschnitt des Datenmodells, den er betrifft.
+
 #### Gliederung der Kontrollpunkte in einem Baum
 
+::: {.entscheid}
 Kontrollpunkte werden heute in Kontrollbereiche, Rubriken und Gruppen gegliedert.
 Das Datenmodell bildet diese Ebenen nicht als eigene Klassen ab.
 Stattdessen ist jeder Kontrollpunkt einem Gliederungselement zugeordnet, und jedes Gliederungselement kann einem übergeordneten Gliederungselement angehören.
@@ -292,8 +297,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 Dafür sind die Ebenen im Modell nicht mehr fest benannt.
 Regeln, die nur für eine bestimmte Ebene gelten, werden erst in der technischen Umsetzung festgelegt.
 
+![](assets/excerpts/gliederung.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Kontrollpunkt und Gliederungselement mit der Beziehung übergeordnet"}
+:::
+
 #### Herkunft der Anforderungen mit Regelwerk und Organisation
 
+::: {.entscheid}
 Heute ist bei vielen Kontrollpunkten nicht klar erkennbar, welche Anforderungen sie prüfen und woher diese stammen.
 Das Datenmodell trennt deshalb drei Fragen:
 
@@ -320,8 +329,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 - **Kontrollpunkte verschiedener Herausgeberinnen werden vergleichbar.**
   Prüfen zwei Kontrollpunkte die gleiche Anforderung, zum Beispiel ein Kontrollpunkt des Bundes und ein kantonsspezifischer Kontrollpunkt, ist das im Modell sichtbar.
 
+![](assets/excerpts/herkunft.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Organisation, Regelwerk, Anforderung und Kontrollpunkt"}
+:::
+
 #### Programme bündeln Anforderungen
 
+::: {.entscheid}
 Betriebe melden sich für Programme an, zum Beispiel für Direktzahlungsprogramme wie RAUS oder BTS oder für Label-Programme.
 Mit der Anmeldung verpflichten sie sich, die Anforderungen des Programms zu erfüllen.
 Das Datenmodell bildet ein Programm deshalb als eigenes Geschäftsobjekt ab, das in einem Regelwerk festgelegt ist und Anforderungen umfasst.
@@ -341,10 +354,13 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Welche Kontrollpunkte zu einem Programm gehören, ergibt sich über die Anforderungen, die sie prüfen.
 
 Programme haben vorerst keine innere Struktur, zum Beispiel keine Teilprogramme pro Tierkategorie.
-Die Anmeldung eines Betriebs für ein Programm ist ein eigenes Geschäftsobjekt der Transaktionsdaten (siehe unten).
+
+![](assets/excerpts/programm.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Regelwerk, Programm, Anforderung und Kontrollpunkt"}
+:::
 
 #### Anmeldungen als Transaktionsdaten
 
+::: {.entscheid}
 Betriebe melden sich jedes Jahr für Programme an.
 Diese Anmeldedaten werden heute im kantonalen Agrarinformationssystem erfasst und in AGIS zusammengeführt.
 Das Datenmodell bildet die Anmeldung als eigenes Geschäftsobjekt der Transaktionsdaten ab.
@@ -363,11 +379,15 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Anmeldedaten liegen in AGIS nicht immer rechtzeitig vor.
   Weil die Anmeldung ihr Datum trägt, lässt sich nachvollziehen, welcher Stand bei der Planung einer Kontrolle bekannt war.
 
+![](assets/excerpts/anmeldung.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Anmeldung für ein Programm, das Anforderungen umfasst"}
+:::
+
 #### Eine Klasse Organisation für alle Rollen
 
+::: {.entscheid}
 Organisationen haben im Kontrollwesen verschiedene Rollen: Sie erlassen Regelwerke, geben Kontrollpunkte heraus oder führen als Kontrollstelle Kontrollen durch.
 Das Datenmodell kennt dafür nur eine Klasse Organisation.
-Welche Rolle eine Organisation hat, ergibt sich aus der Beziehung, zum Beispiel «Herausgeberin» beim Kontrollpunkt oder «Kontrollstelle» bei der Kontrolle.
+Welche Rolle eine Organisation hat, ergibt sich aus der Beziehung, zum Beispiel «herausgegeben von» beim Kontrollpunkt oder «durchgeführt von» bei der Kontrolle.
 
 Wir haben uns aus folgenden Gründen dafür entschieden:
 
@@ -382,8 +402,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 Organisationen werden über die Unternehmens-Identifikationsnummer (UID) identifiziert [@uid-register].
 Alle Organisationen im Kontrollwesen haben eine UID, auch Bundesämter, kantonale Ämter und Vereine.
 
+![](assets/excerpts/organisation.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: die Beziehungen von Regelwerk, Kontrollpunkt, Kontrollpunktkatalog, Person und Kontrolle zur Organisation"}
+:::
+
 #### Kontrollpunktkataloge der Herausgeberinnen
 
+::: {.entscheid}
 Die Herausgeberinnen ändern ihre Kontrollpunkte in unterschiedlichem Rhythmus:
 
 - **Bund:** Das BLW veröffentlicht die Kontrollpunkte und Fokuskontrollpunkte des Bundes jeweils Ende August für das Folgejahr (Art. 9 Abs. 2 VKKL [@vkkl]).
@@ -418,8 +442,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Bund, Kantone, Label-Organisationen und künftig weitere Organisationen veröffentlichen ihre Kontrollpunkte je in einem eigenen Katalog und in ihrem eigenen Rhythmus.
   Kommt eine neue Herausgeberin hinzu, muss das Modell nicht angepasst werden.
 
+![](assets/excerpts/katalog.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Kontrollpunktkatalog mit Auswahl der Fokuskontrollpunkte, Kontrollpunkt und Organisation"}
+:::
+
 #### Ersetzung von Kontrollpunkten
 
+::: {.entscheid}
 Herausgeberinnen ändern ihre Kontrollpunkte regelmässig, der Bund jährlich, Label-Organisationen auch unterjährig.
 Ändert sich ein Kontrollpunkt inhaltlich, entsteht ein neuer Kontrollpunkt.
 Er verweist ausdrücklich auf den Kontrollpunkt, den er ersetzt.
@@ -439,8 +467,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 
 Ein Kontrollpunkt ersetzt nur Kontrollpunkte derselben Herausgeberin.
 
+![](assets/excerpts/ersetzung.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Kontrollpunkt mit der Beziehung ersetzt und seiner Herausgeberin"}
+:::
+
 #### Erforderliche Qualifikation pro Kontrollpunkt
 
+::: {.entscheid}
 Gewisse Kontrollpunkte dürfen nur Personen mit einer bestimmten Qualifikation abschliessend prüfen.
 Zwei Beispiele aus den Technischen Weisungen des BLV [@blv-tw-primaerproduktion]:
 
@@ -464,8 +496,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 Qualifikationen haben vorerst keine Struktur.
 Dass zum Beispiel eine amtliche Tierärztin auch alles prüfen darf, was eine amtliche Fachassistentin prüfen darf, ist im Modell noch nicht abgebildet.
 
+![](assets/excerpts/qualifikation.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Kontrollpunkt erfordert Qualifikation, Person besitzt Qualifikation, Qualifikation festgelegt in Regelwerk"}
+:::
+
 #### Personen als schlanker Verweis
 
+::: {.entscheid}
 Damit ersichtlich ist, wer eine Kontrolle durchgeführt und eine Beobachtung festgestellt hat, kennt das Datenmodell eine Klasse Person.
 Eine Person gehört einer oder mehreren Organisationen an und besitzt Qualifikationen.
 Sie wird nur über einen Identifikator erfasst, ohne Namen oder Adresse.
@@ -480,8 +516,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 - **Personen sind Stammdaten.**
   Das Modell bildet nur ab, was für Kontrolldaten nötig ist, und überlässt die übrigen Angaben den bestehenden Verzeichnissen.
 
+![](assets/excerpts/person.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Person mit Organisation und Qualifikation, Kontrolle und Beobachtung verweisen auf die Person"}
+:::
+
 #### Korrektur und Folgebeobachtung
 
+::: {.entscheid}
 Eine Beobachtung kann auf eine andere Beobachtung verweisen.
 Das Datenmodell unterscheidet dabei zwei Fälle:
 
@@ -502,12 +542,45 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 - **Abschliessende Beurteilungen lassen sich verfolgen.**
   Stellt eine Person ohne die erforderliche Qualifikation etwas fest, verweist die Beurteilung der qualifizierten Person auf diese erste Beobachtung.
 
+![](assets/excerpts/korrektur.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Kontrolle enthält tatsächliche Beobachtungen, die einander korrigieren oder aufeinander folgen"}
+:::
+
+#### Vordefinierte Mängel und flexible Abweichungen
+
+::: {.entscheid}
+Die Masterliste führt heute zu vielen Kontrollpunkten mögliche Mängel, zum Beispiel «Ungenügende Rückverfolgbarkeit der Abgaben».
+Im Datenmodell sind diese vordefinierten Mängel mögliche Ergebnisse eines Kontrollpunkts.
+Ein mögliches Ergebnis kann zusätzlich eine Mengeneinheit angeben, zum Beispiel «ha betroffene Fläche».
+
+Die tatsächliche Beobachtung muss aber nicht auf ein vordefiniertes Ergebnis verweisen.
+Sie hält immer ihr eigenes Ergebnis fest, zum Beispiel «Mangel», und kann eine Abweichung frei beschreiben und eine Menge angeben.
+Damit sind drei Fälle möglich:
+
+- ein vordefinierter Mangel, so wie er im Katalog steht,
+- ein vordefinierter Mangel mit einer Beschreibung, wie der konkrete Fall davon abweicht,
+- ein Mangel, der im Katalog nicht vorgesehen ist, nur mit freier Beschreibung.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Kataloge decken nie alle Fälle ab.**
+  Die Masterliste 2027 enthält deshalb bei 604 von 610 Kontrollpunkten mit vordefinierten Mängeln zusätzlich den allgemeinen Eintrag «Anderer Mangel».
+  Die Arbeitsgruppe hat verlangt, dass Abweichungen von den vordefinierten Mängeln flexibel erfasst werden können.
+- **Vordefinierte Mängel bleiben auswertbar.**
+  Wo ein vordefinierter Mangel passt, wird er verwendet und lässt sich über alle Kontrollen hinweg zählen.
+- **Mengen zeigen das Ausmass eines Mangels.**
+  Wie schwer ein Mangel wiegt, hängt oft von einer Menge ab, zum Beispiel von der betroffenen Fläche oder von der Anzahl fehlender Auslauftage.
+
+Ist das Ergebnis einer Beobachtung «Mangel», muss mindestens ein vordefinierter Mangel oder eine freie Beschreibung der Abweichung angegeben sein.
+
+![](assets/excerpts/maengel.svg){fig-alt="Ausschnitt aus dem konzeptionellen Datenmodell: Kontrollpunkt legt mögliche Ergebnisse fest, die tatsächliche Beobachtung verweist auf ein festgestelltes Ergebnis"}
+:::
+
 ### Offene Fragen {#sec-open-questions}
 
 Die Kontrollpunkte sollen künftig neu formuliert werden.
 Das Datenmodell verwendet heute die bestehenden Kontrollpunkte.
 Eine Anforderung muss dabei nur einmal erfasst werden, auch wenn mehrere Kontrollpunkte sie prüfen.
-Für die Neuformulierung sind folgende Fragen noch offen:
+Für die Neuformulierung und für die Massnahmen sind folgende Fragen noch offen:
 
 - **Geltungsbereich:** Viele Kontrollpunkte werden heute wiederholt, weil sie für verschiedene Tierkategorien, Kulturen oder Betriebsarten gelten.
   Soll ein Kontrollpunkt künftig einen Geltungsbereich als Merkmal haben, und gehört dieser zur Anforderung, zum Kontrollpunkt oder zu beiden?
@@ -515,6 +588,8 @@ Für die Neuformulierung sind folgende Fragen noch offen:
   Sollen solche Anforderungen für alle Kontrollpunkte darunter gelten, oder verweist jeder Kontrollpunkt ausdrücklich auf sie?
 - **Ausnahmen:** Ausnahmen wie «Suhlen für Yaks und Wasserbüffel» lockern oder heben andere Anforderungen für einen bestimmten Fall auf.
   Wie werden solche Ausnahmen erfasst, auch wenn sie nur befristet gelten?
+- **Massnahmen:** Massnahmen und Sanktionen sind noch nicht modelliert.
+  Zu klären ist, wie vorgeschlagene Massnahmen, zum Beispiel die Sanktionen in der Masterliste, und tatsächlich angeordnete Massnahmen abgebildet werden, welche Arten es braucht, zum Beispiel Sanktionspunkte oder Kürzungen in CHF, und ob angeordnete Massnahmen als besonders schützenswerte Daten überhaupt ausgetauscht werden dürfen.
 
 ## Logisches Datenmodell {#sec-logical-model}
 
@@ -554,6 +629,7 @@ Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
 
 #### SKOS für Gliederung, Katalog und Fokuskontrollpunkte
 
+::: {.entscheid}
 Die Gliederungselemente werden als `skos:Concept` umgesetzt und über `skos:broader` verschachtelt.
 Ein Kontrollpunktkatalog ist ein `skos:ConceptScheme`, die Auswahl der Fokuskontrollpunkte eine `skos:Collection`.
 
@@ -568,15 +644,27 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 - **Das Fachglossar verwendet ebenfalls SKOS.**
   Das Fachglossar (@sec-glossary) ist als SKOS-Konzeptschema modelliert, die Daten bleiben dadurch einheitlich.
 
-#### Gleiche Rechtsnatur als Prüfregel
+![](assets/excerpts/skos.svg){fig-alt="Ausschnitt aus dem logischen Datenmodell: Kontrollpunkt, Gliederungselement als skos:Concept, Kontrollpunktkatalog als skos:ConceptScheme und Fokuskontrollpunkte als skos:Collection"}
+:::
 
-Dass ein Kontrollpunkt nur Anforderungen einer Rechtsnatur prüft, lässt sich in einem Klassendiagramm nicht als Kardinalität ausdrücken.
-Die Regel wird deshalb in der technischen Umsetzung als SHACL-Regel [@shacl] geprüft.
+#### Prüfregeln mit SHACL
+
+::: {.entscheid}
+Einige Regeln lassen sich in einem Klassendiagramm nicht als Kardinalität ausdrücken.
+Sie werden in der technischen Umsetzung als SHACL-Regeln [@shacl] geprüft:
+
+- Alle Anforderungen, die ein Kontrollpunkt prüft, stammen aus Regelwerken mit derselben Rechtsnatur.
+- Ein Kontrollpunkt ersetzt nur Kontrollpunkte derselben Herausgeberin.
+- Ist das Ergebnis einer Beobachtung «Mangel», ist ein vordefinierter Mangel oder eine freie Beschreibung der Abweichung angegeben.
+
 Die Rechtsnatur wird nur beim Regelwerk erfasst und nicht beim Kontrollpunkt wiederholt, damit sich die Angaben nicht widersprechen können.
-Ebenso wird als SHACL-Regel geprüft, dass ein Kontrollpunkt nur Kontrollpunkte derselben Herausgeberin ersetzt.
+
+![](assets/excerpts/pruefregeln.svg){fig-alt="Ausschnitt aus dem logischen Datenmodell: Regelwerk mit Rechtsnatur, Anforderung, Kontrollpunkt und Organisation mit den Prüfregeln als Notizen"}
+:::
 
 #### Neue Kontrollpunkte statt Versionsnummern
 
+::: {.entscheid}
 Ein Kontrollpunkt hat keine Versionsnummer.
 Ändert sich ein Kontrollpunkt inhaltlich, erhält der neue Kontrollpunkt eine eigene IRI und verweist mit `dcterms:replaces` auf den früheren.
 
@@ -588,9 +676,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Mit Versionsnummern und Ersetzungen gäbe es zwei Wege, dieselbe Änderung festzuhalten.
   Mit nur einem Weg bleiben die Daten eindeutig.
 
+![](assets/excerpts/versionen.svg){fig-alt="Ausschnitt aus dem logischen Datenmodell: Kontrollpunkt mit der Beziehung dcterms:replaces"}
+:::
 
 #### Qualifikationsnachweis mit Gültigkeit
 
+::: {.entscheid}
 Dass eine Person eine Qualifikation besitzt, wird als eigener Qualifikationsnachweis mit Gültigkeitszeitraum erfasst.
 
 Wir haben uns aus folgenden Gründen dafür entschieden:
@@ -602,8 +693,12 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   In RDF hat eine einfache Beziehung zwischen Person und Qualifikation keine eigenen Merkmale.
   Der Qualifikationsnachweis macht die Gültigkeit erfassbar.
 
+![](assets/excerpts/qualifikationsnachweis.svg){fig-alt="Ausschnitt aus dem logischen Datenmodell: Person besitzt Qualifikationsnachweise mit Gültigkeit, die auf eine Qualifikation verweisen"}
+:::
+
 #### PROV-O für Korrekturen, eigenes Merkmal für Folgebeobachtungen
 
+::: {.entscheid}
 Eine Korrektur wird mit `prov:wasRevisionOf` aus PROV-O [@prov-o] erfasst.
 Für die Folgebeobachtung verwendet das Modell ein eigenes Merkmal `folgtAuf` im Namensraum von eCH-0264.
 
@@ -615,6 +710,9 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 - **Für Folgebeobachtungen gibt es kein passendes Standardmerkmal.**
   Eine Nachkontrolle ist keine Überarbeitung der früheren Beobachtung, sondern eine neue Feststellung.
   Ein eigenes Merkmal verhindert, dass ein Standardmerkmal in einer anderen Bedeutung verwendet wird.
+
+![](assets/excerpts/prov.svg){fig-alt="Ausschnitt aus dem logischen Datenmodell: tatsächliche Beobachtung mit prov:wasRevisionOf und folgtAuf"}
+:::
 
 # Haftungsausschluss {#sec-disclaimer}
 

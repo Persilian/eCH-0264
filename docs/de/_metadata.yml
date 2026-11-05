@@ -1,0 +1,7 @@
+# Projektspezifische Einstellungen für die Dokumente in docs/de, ergänzend zu
+# docs/_quarto.yml aus dem semantic-web-template (Quarto fügt sie zusammen).
+# Modellierungsentscheide stehen neben einem Ausschnitt des Datenmodells; der
+# Filter bindet für die Website auch entscheid.css ein.
+filters:
+  - path: assets/entscheid.lua
+    at: pre-quarto

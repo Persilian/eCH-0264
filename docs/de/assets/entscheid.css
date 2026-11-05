@@ -1,0 +1,18 @@
+/* Modellierungsentscheide neben einem Ausschnitt des Datenmodells
+   (siehe entscheid.lua): schmale Ausschnitte neben dem Text, breite darunter;
+   auf schmalen Bildschirmen immer untereinander. */
+.entscheid {
+  margin-bottom: 1.5rem;
+}
+.entscheid-abbildung img {
+  max-width: 100%;
+  height: auto;
+}
+@media (min-width: 768px) {
+  .entscheid-nebeneinander {
+    display: grid;
+    grid-template-columns: minmax(18rem, 1fr) minmax(0, max-content);
+    column-gap: 2rem;
+    align-items: start;
+  }
+}
