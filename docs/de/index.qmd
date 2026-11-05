@@ -284,9 +284,9 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Die Kataloge von Bund, Kantonen und privaten Labels haben nicht alle die gleichen Ebenen.
   Manche haben mehr, andere weniger, manche nennen sie anders.
   Mit einer einzigen, verschachtelbaren Struktur passen alle Kataloge ins gleiche Modell, ohne dass es geändert werden muss.
-- **Das Modell wird einfacher.**
-  Ein Kontrollpunkt hängt immer an genau einem Gliederungselement.
-  Es braucht keine Sonderregel mehr, ob er in einer Gruppe oder direkt in einer Rubrik liegt.
+- **Jeder Kontrollpunkt ist gleich eingeordnet.**
+  Ein Kontrollpunkt ist immer genau einem Gliederungselement zugeordnet.
+  Ob dieses Gliederungselement einer Gruppe oder einer Rubrik entspricht, muss im Modell nicht unterschieden werden.
 
 Dafür sind die Ebenen im Modell nicht mehr fest benannt.
 Regeln, die nur für eine bestimmte Ebene gelten, werden erst in der technischen Umsetzung festgelegt.
