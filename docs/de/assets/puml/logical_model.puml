@@ -1,0 +1,131 @@
+' Logisches Datenmodell von eCH-0264 (Umsetzung in RDF) (handgezeichnet, wird via Makefile nach docs/de/assets/img/ gerendert (SVG))
+' Pakete: Referenzdaten und Transaktionsdaten (Kontrolldaten, die zwischen den Systemen fliessen).
+' Stammdaten werden nicht modelliert; die Kontrolle verweist mit Identifikatoren (BUR-Nummer, UID) auf sie.
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam roundCorner 10
+skinparam packageStyle rectangle
+skinparam defaultFontSize 12
+skinparam Padding 3
+skinparam ArrowColor #444444
+skinparam ArrowThickness 1.2
+skinparam classBorderColor #444444
+skinparam classBackgroundColor #FFFFFF
+skinparam packageBorderColor #999999
+skinparam packageBackgroundColor #F4F4F4
+skinparam noteBorderColor #999999
+skinparam noteBackgroundColor #FFFFFF
+skinparam classAttributeIconSize 0
+skinparam legendBorderColor #999999
+skinparam legendBackgroundColor #FFFFFF
+skinparam legendFontSize 11
+hide circle
+hide empty members
+
+package "Referenzdaten" as REF {
+  class "Organisation" as ORG {
+    uid : xsd:string
+    schema:name : rdf:langString [1..*]
+  }
+  class "Regelwerk" as RW {
+    schema:name : rdf:langString [1..*]
+    fassung : xsd:date
+    rechtsnatur : Rechtsnatur
+    schema:url : xsd:anyURI [0..1]
+  }
+  enum "Rechtsnatur" as RN <<enumeration>> {
+    öffentlich-rechtlich
+    privatrechtlich
+  }
+  class "Anforderung" as ANF {
+    schema:description : rdf:langString [1..*]
+    fundstelle : xsd:string [0..1]
+  }
+  class "Kontrollpunktkatalog" as KAT <<skos:ConceptScheme>> {
+    schema:name : rdf:langString [1..*]
+    schema:datePublished : xsd:date
+    schema:validFrom : xsd:date
+    schema:validThrough : xsd:date [0..1]
+  }
+  class "Fokuskontrollpunkte" as FKP <<skos:Collection>>
+  class "Gliederungselement" as KZ <<skos:Concept>>
+  class "Kontrollpunkt" as KP {
+    schema:identifier : xsd:string
+    skos:notation : xsd:string [0..1]
+    schema:name : rdf:langString [1..*]
+    schema:description : rdf:langString [1..*]
+    schema:version : xsd:string [0..1]
+    schema:validFrom : xsd:date [0..1]
+    schema:validThrough : xsd:date [0..1]
+  }
+  class "Mögliches Ergebnis" as ERG {
+    wert : Ergebniswert
+  }
+  enum "Ergebniswert" as ERGW <<enumeration>> {
+    ...
+  }
+
+  ' Herkunft: Organisation erlässt Regelwerk, Regelwerk enthält Anforderungen
+  RW "0..*" -up-> "1" ORG : erlassen von
+  RW -right-> RN
+  ANF "1..*" -up-> "1" RW : stammt aus
+
+  ' Kontrollpunkt prüft Anforderungen und wird von einer Organisation herausgegeben
+  KP "0..*" -up-> "1..*" ANF : prüft
+  KP "0..*" -up-> "1" ORG : herausgeberin
+
+  ' Jährliche Ausgabe: Katalog mit gültigen Kontrollpunkten und Auswahl der Fokuskontrollpunkte
+  KAT "0..*" --> "1" ORG : herausgeberin
+  KP "1..*" --> "1..*" KAT : skos:inScheme
+  KAT "1" *-- "0..1" FKP
+  FKP "0..*" --> "1..*" KP : skos:member
+
+  ' Gliederung: Gliederungselemente sind über skos:broader beliebig tief verschachtelt
+  ' (z. B. Kontrollbereich > Rubrik > Gruppe)
+  KZ "0..*" --> "0..1" KZ : skos:broader
+  KP "0..*" --> "1" KZ : zugeordnet
+
+  note right of ANF
+    Alle Anforderungen, die ein Kontrollpunkt
+    prüft, stammen aus Regelwerken mit
+    derselben Rechtsnatur (SHACL-Regel).
+  end note
+
+  KP -right-> "1..*" ERG : möglich
+  ERG -right-> ERGW
+}
+
+package "Transaktionsdaten" as TRX {
+  ' Verweise auf Stammdaten über Identifikatoren
+  class "Kontrolle" as KON {
+    datum : xsd:date
+    kontrollperson : xsd:string [0..1]
+    oertlicheEinheit : xsd:string
+    rechtlicheEinheit : xsd:string
+  }
+  class "Tatsächliche Beobachtung" as BEO {
+    wert : Ergebniswert
+    bild : xsd:anyURI [0..1]
+    abweichung : rdf:langString [0..1]
+  }
+  KON "1" *-right- "0..*" BEO : enthält
+}
+
+BEO -up-> KP
+BEO -up-> ERG : Ergebnis
+KON "0..*" -up-> "0..1" ORG : kontrollstelle
+REF -[hidden]down- TRX
+
+legend bottom right
+  <b>Kardinalitäten</b>
+  |= Angabe |= Bedeutung |
+  | 1 | genau eins |
+  | 0..1 | keins oder eins (optional) |
+  | 0..* | keins, eins oder beliebig viele |
+  | 1..* | mindestens eins |
+  Bei Attributen in eckigen Klammern, z. B. <i>bild : xsd:anyURI [0..1]</i>;
+  ohne Angabe gilt 1.
+  Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
+endlegend
+@enduml
