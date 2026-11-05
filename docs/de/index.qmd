@@ -414,6 +414,20 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 
 Ein Kontrollpunkt ersetzt nur Kontrollpunkte derselben Herausgeberin.
 
+### Offene Fragen {#sec-open-questions}
+
+Die Kontrollpunkte sollen künftig neu formuliert werden.
+Das Datenmodell verwendet heute die bestehenden Kontrollpunkte.
+Eine Anforderung muss dabei nur einmal erfasst werden, auch wenn mehrere Kontrollpunkte sie prüfen.
+Für die Neuformulierung sind folgende Fragen noch offen:
+
+- **Geltungsbereich:** Viele Kontrollpunkte werden heute wiederholt, weil sie für verschiedene Tierkategorien, Kulturen oder Betriebsarten gelten.
+  Soll ein Kontrollpunkt künftig einen Geltungsbereich als Merkmal haben, und gehört dieser zur Anforderung, zum Kontrollpunkt oder zu beiden?
+- **Übergreifende Anforderungen:** Manche Anforderungen gelten für alle Kontrollpunkte eines Programms oder eines Bereichs, zum Beispiel vollständige Aufzeichnungen.
+  Sollen solche Anforderungen für alle Kontrollpunkte darunter gelten, oder verweist jeder Kontrollpunkt ausdrücklich auf sie?
+- **Ausnahmen:** Ausnahmen wie «Suhlen für Yaks und Wasserbüffel» lockern oder heben andere Anforderungen für einen bestimmten Fall auf.
+  Wie werden solche Ausnahmen erfasst, auch wenn sie nur befristet gelten?
+
 ## Logisches Datenmodell {#sec-logical-model}
 
 Das logische Datenmodell (@fig-logical-model) beschreibt, wie das konzeptionelle Datenmodell im Resource Description Framework (RDF) [@rdf] umgesetzt wird.
