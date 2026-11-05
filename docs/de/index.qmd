@@ -263,9 +263,10 @@ Es unterscheidet zwei Arten von Daten:
   Für jeden kontrollierten Kontrollpunkt wird eine tatsächliche Beobachtung mit dem festgestellten Ergebnis erfasst, bei Bedarf ergänzt mit einem Bild und einer Beschreibung der Abweichung.
   Jede Beobachtung hält fest, welche Person sie festgestellt hat.
   Eine Beobachtung kann eine falsch erfasste Beobachtung korrigieren oder auf eine frühere Beobachtung folgen, zum Beispiel bei einer Nachkontrolle.
+  Eine Anmeldung hält fest, dass sich ein Betrieb für ein Beitragsjahr für ein Programm angemeldet hat und wann er dies getan hat.
 
 Stammdaten werden nicht modelliert, mit Ausnahme einer schlanken Person ohne Namen (@sec-modelling-decisions).
-Die Kontrolle verweist auf die örtliche Einheit mit der Nummer des Betriebs- und Unternehmensregisters (BUR-Nummer) [@bur; @digiagrifood-stammdaten] und auf die rechtliche Einheit mit der Unternehmens-Identifikationsnummer (UID) [@uid-register].
+Kontrolle und Anmeldung verweisen auf die örtliche Einheit mit der Nummer des Betriebs- und Unternehmensregisters (BUR-Nummer) [@bur; @digiagrifood-stammdaten] und auf die rechtliche Einheit mit der Unternehmens-Identifikationsnummer (UID) [@uid-register].
 
 ![Konzeptionelles Datenmodell](assets/img/conceptual_model.svg){#fig-conceptual-model width="80%"}
 
@@ -340,7 +341,27 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Welche Kontrollpunkte zu einem Programm gehören, ergibt sich über die Anforderungen, die sie prüfen.
 
 Programme haben vorerst keine innere Struktur, zum Beispiel keine Teilprogramme pro Tierkategorie.
-Die Anmeldung eines Betriebs für ein Programm wird nicht modelliert, weil sie zu den Stammdaten gehört.
+Die Anmeldung eines Betriebs für ein Programm ist ein eigenes Geschäftsobjekt der Transaktionsdaten (siehe unten).
+
+#### Anmeldungen als Transaktionsdaten
+
+Betriebe melden sich jedes Jahr für Programme an.
+Diese Anmeldedaten werden heute im kantonalen Agrarinformationssystem erfasst und in AGIS zusammengeführt.
+Das Datenmodell bildet die Anmeldung als eigenes Geschäftsobjekt der Transaktionsdaten ab.
+Eine Anmeldung verweist auf den Betrieb, das Programm und das Beitragsjahr und hält fest, wann sie erfolgt ist.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Eine Anmeldung ist ein Vorgang, kein Merkmal des Betriebs.**
+  Sie erfolgt zu einem bestimmten Zeitpunkt, gilt für ein Beitragsjahr und wiederholt sich jedes Jahr.
+  Wie eine Kontrolle verbindet sie einen Betrieb mit Referenzdaten, hier mit einem Programm.
+  Dass AGIS die Anmeldedaten zusammen mit Stammdaten führt, ändert daran nichts.
+- **Die Anmeldung bestimmt, was kontrolliert werden muss.**
+  Welche Kontrollpunkte für einen Betrieb gelten, hängt von seinen Anmeldungen ab.
+  Kontrollstellen wollen Kontrollen anhand aktueller Anmeldedaten planen (UC-18), und Acontrol setzt Kontrollpunkte von Programmen ohne Anmeldung auf «nicht zutreffend» (UC-20).
+- **Verzögerungen werden sichtbar.**
+  Anmeldedaten liegen in AGIS nicht immer rechtzeitig vor.
+  Weil die Anmeldung ihr Datum trägt, lässt sich nachvollziehen, welcher Stand bei der Planung einer Kontrolle bekannt war.
 
 #### Eine Klasse Organisation für alle Rollen
 
@@ -522,7 +543,7 @@ Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
 | Beobachtung korrigiert Beobachtung | `prov:wasRevisionOf` |
 | Beobachtung folgt auf Beobachtung | `folgtAuf` (Namensraum von eCH-0264) |
 | Person besitzt Qualifikation | Qualifikationsnachweis mit Gültigkeit (`schema:validFrom`, `schema:validThrough`) |
-| Organisation, Person, Qualifikation, Regelwerk, Programm, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung | Klassen im Namensraum von eCH-0264 |
+| Organisation, Person, Qualifikation, Regelwerk, Programm, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung, Anmeldung | Klassen im Namensraum von eCH-0264 |
 | übrige Beziehungen | Merkmale im Namensraum von eCH-0264 |
 
 : Abbildung des konzeptionellen auf das logische Datenmodell {#tbl-logical-mapping tbl-colwidths="[45,55]"}

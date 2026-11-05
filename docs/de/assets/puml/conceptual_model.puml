@@ -53,8 +53,10 @@ package "Referenzdaten" as REF {
 
 package "Transaktionsdaten" as TRX {
   class "Kontrolle" as KON
+  class "Anmeldung" as ANM
   class "Tatsächliche\nBeobachtung" as BEO
   KON *-down- BEO : enthält
+  ANM -up-> PRG : für
   BEO --> BEO : korrigiert
   BEO --> BEO : folgt auf
 }

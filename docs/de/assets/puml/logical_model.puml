@@ -130,6 +130,12 @@ package "Referenzdaten" as REF {
 
 package "Transaktionsdaten" as TRX {
   ' Verweise auf Stammdaten über Identifikatoren
+  class "Anmeldung" as ANM {
+    oertlicheEinheit : xsd:string
+    rechtlicheEinheit : xsd:string
+    beitragsjahr : xsd:gYear
+    angemeldetAm : xsd:date
+  }
   class "Kontrolle" as KON {
     datum : xsd:date
     oertlicheEinheit : xsd:string
@@ -141,6 +147,7 @@ package "Transaktionsdaten" as TRX {
     abweichung : rdf:langString [0..1]
   }
   KON "1" *-down- "0..*" BEO : enthält
+  ANM "0..*" -up-> "1" PRG : für
   ' Korrektur: berichtigt eine falsch erfasste Beobachtung, die nicht mehr gilt
   BEO "0..1" --> "0..1" BEO : prov:wasRevisionOf
   ' Folgebeobachtung: z. B. Nachkontrolle oder abschliessende Beurteilung; die frühere bleibt gültig
