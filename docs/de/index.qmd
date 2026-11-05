@@ -247,6 +247,7 @@ Es unterscheidet zwei Arten von Daten:
 - **Referenzdaten** legen fest, was kontrolliert wird.
   Eine Organisation erlässt ein Regelwerk, zum Beispiel eine Verordnung oder eine Label-Richtlinie, in einer bestimmten Fassung.
   Ein Regelwerk ist öffentlich-rechtlich oder privatrechtlich und enthält Anforderungen.
+  Ein Programm, zum Beispiel ein Direktzahlungsprogramm wie RAUS oder BTS, ist in einem Regelwerk festgelegt und umfasst die Anforderungen, zu deren Einhaltung sich ein Betrieb mit der Anmeldung verpflichtet.
   Ein Kontrollpunkt prüft eine oder mehrere Anforderungen und wird von einer Organisation herausgegeben.
   Alle Anforderungen eines Kontrollpunkts stammen aus Regelwerken mit derselben Rechtsnatur.
   Der Kontrollpunkt legt mindestens ein mögliches Ergebnis fest.
@@ -313,6 +314,29 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Die Rechtsnatur eines Kontrollpunkts muss nicht separat erfasst werden, sie ergibt sich aus seinen Anforderungen.
 - **Kontrollpunkte verschiedener Herausgeberinnen werden vergleichbar.**
   Prüfen zwei Kontrollpunkte die gleiche Anforderung, zum Beispiel ein Kontrollpunkt des Bundes und ein kantonsspezifischer Kontrollpunkt, ist das im Modell sichtbar.
+
+#### Programme bündeln Anforderungen
+
+Betriebe melden sich für Programme an, zum Beispiel für Direktzahlungsprogramme wie RAUS oder BTS oder für Label-Programme.
+Mit der Anmeldung verpflichten sie sich, die Anforderungen des Programms zu erfüllen.
+Das Datenmodell bildet ein Programm deshalb als eigenes Geschäftsobjekt ab, das in einem Regelwerk festgelegt ist und Anforderungen umfasst.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Eine Anforderung kann zu mehreren Programmen gehören.**
+  In der Masterliste übernimmt zum Beispiel der Weidebeitrag Anforderungen von RAUS: Mehrere Kontrollpunkte des Weidebeitrags verlangen Auslauf «gemäss RAUS», und einzelne Kontrollpunkte kommen in beiden Programmen wortgleich vor.
+  Mit einer eigenen Klasse Programm wird eine solche Anforderung nur einmal erfasst und beiden Programmen zugeordnet.
+- **Die Zugehörigkeit steht nicht nur im Text.**
+  Welche Anforderungen zu einem Programm gehören, ist ausdrücklich erfasst und nicht nur aus der Fundstelle im Regelwerk ablesbar.
+  So lassen sich Kontrollergebnisse auch pro Programm auswerten.
+- **Programm und Gliederung bleiben getrennt.**
+  Wie eine Herausgeberin ihren Katalog gliedert, ist etwas anderes als die Frage, wozu sich ein Betrieb verpflichtet.
+  Die Masterliste teilt zum Beispiel RAUS in mehrere Rubriken pro Tierkategorie auf, das Programm ist aber eines.
+- **Kontrollpunkte bleiben unverändert.**
+  Welche Kontrollpunkte zu einem Programm gehören, ergibt sich über die Anforderungen, die sie prüfen.
+
+Programme haben vorerst keine innere Struktur, zum Beispiel keine Teilprogramme pro Tierkategorie.
+Die Anmeldung eines Betriebs für ein Programm wird nicht modelliert, weil sie zu den Stammdaten gehört.
 
 #### Eine Klasse Organisation für alle Rollen
 
@@ -413,7 +437,7 @@ Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
 | Auswahl Fokuskontrollpunkte | `skos:Collection` |
 | Auswahl umfasst Kontrollpunkt | `skos:member` |
 | Kontrollpunkt ersetzt Kontrollpunkt | `dcterms:replaces` |
-| Organisation, Regelwerk, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung | Klassen im Namensraum von eCH-0264 |
+| Organisation, Regelwerk, Programm, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung | Klassen im Namensraum von eCH-0264 |
 | übrige Beziehungen | Merkmale im Namensraum von eCH-0264 |
 
 : Abbildung des konzeptionellen auf das logische Datenmodell {#tbl-logical-mapping tbl-colwidths="[45,55]"}

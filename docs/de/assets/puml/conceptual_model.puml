@@ -22,6 +22,7 @@ package "Referenzdaten" as REF {
   class "Organisation" as ORG
   class "Regelwerk" as RW
   class "Anforderung" as ANF
+  class "Programm" as PRG
   class "Kontrollpunkt" as KP
   class "Mögliches Ergebnis" as ERG
   class "Gliederungselement" as GE
@@ -30,6 +31,8 @@ package "Referenzdaten" as REF {
 
   RW -up-> ORG : erlassen von
   ANF -up-> RW : stammt aus
+  PRG -up-> RW : festgelegt in
+  PRG --> ANF : umfasst
   KP -up-> ANF : prüft
   KP -up-> ORG : herausgegeben von
   KP -down-> ERG : legt fest

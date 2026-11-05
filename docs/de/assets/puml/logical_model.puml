@@ -42,6 +42,10 @@ package "Referenzdaten" as REF {
     schema:description : rdf:langString [1..*]
     fundstelle : xsd:string [0..1]
   }
+  class "Programm" as PRG {
+    schema:name : rdf:langString [1..*]
+    schema:identifier : xsd:string [0..1]
+  }
   class "Kontrollpunktkatalog" as KAT <<skos:ConceptScheme>> {
     schema:name : rdf:langString [1..*]
     schema:datePublished : xsd:date
@@ -69,6 +73,10 @@ package "Referenzdaten" as REF {
   RW "0..*" -up-> "1" ORG : erlassen von
   RW -right-> RN
   ANF "1..*" -up-> "1" RW : stammt aus
+
+  ' Programm: bündelt Anforderungen, zu deren Einhaltung sich ein Betrieb mit der Anmeldung verpflichtet
+  PRG "0..*" -up-> "1" RW : festgelegt in
+  PRG "0..*" --> "1..*" ANF : umfasst
 
   ' Kontrollpunkt prüft Anforderungen und wird von einer Organisation herausgegeben
   KP "0..*" -up-> "1..*" ANF : prüft
