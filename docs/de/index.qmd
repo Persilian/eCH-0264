@@ -256,11 +256,14 @@ Es unterscheidet zwei Arten von Daten:
   Jede Herausgeberin veröffentlicht ihre gültigen Kontrollpunkte in einem Kontrollpunktkatalog, zum Beispiel das BLW jährlich in der Masterliste oder eine Label-Organisation bei jeder Änderung ihrer Richtlinien.
   Zu einem Katalog kann eine Auswahl der Fokuskontrollpunkte gehören.
   Ein neuer Kontrollpunkt kann einen oder mehrere frühere Kontrollpunkte derselben Herausgeberin ersetzen.
+  Ein Kontrollpunkt kann eine Qualifikation erfordern, die eine Person besitzen muss, um ihn abschliessend zu prüfen.
+  Personen gehören einer oder mehreren Organisationen an, zum Beispiel einer Kontrollstelle oder einem kantonalen Veterinäramt.
 - **Transaktionsdaten** entstehen bei einer Kontrolle und fliessen zwischen den Systemen.
-  Eine Kontrolle hält fest, wann sie stattgefunden hat, welche örtliche Einheit kontrolliert wurde und zu welcher rechtlichen Einheit diese gehört, sowie gegebenenfalls die Kontrollperson und die Organisation, die als Kontrollstelle die Kontrolle durchgeführt hat.
+  Eine Kontrolle hält fest, wann sie stattgefunden hat, welche örtliche Einheit kontrolliert wurde und zu welcher rechtlichen Einheit diese gehört, welche Personen sie durchgeführt haben und gegebenenfalls welche Organisation als Kontrollstelle beauftragt war.
   Für jeden kontrollierten Kontrollpunkt wird eine tatsächliche Beobachtung mit dem festgestellten Ergebnis erfasst, bei Bedarf ergänzt mit einem Bild und einer Beschreibung der Abweichung.
+  Jede Beobachtung hält fest, welche Person sie festgestellt hat.
 
-Stammdaten werden nicht modelliert.
+Stammdaten werden nicht modelliert, mit Ausnahme einer schlanken Person ohne Namen (@sec-modelling-decisions).
 Die Kontrolle verweist auf die örtliche Einheit mit der Nummer des Betriebs- und Unternehmensregisters (BUR-Nummer) [@bur; @digiagrifood-stammdaten] und auf die rechtliche Einheit mit der Unternehmens-Identifikationsnummer (UID) [@uid-register].
 
 ![Konzeptionelles Datenmodell](assets/img/conceptual_model.svg){#fig-conceptual-model width="80%"}
@@ -414,6 +417,47 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 
 Ein Kontrollpunkt ersetzt nur Kontrollpunkte derselben Herausgeberin.
 
+#### Erforderliche Qualifikation pro Kontrollpunkt
+
+Gewisse Kontrollpunkte dürfen nur Personen mit einer bestimmten Qualifikation abschliessend prüfen.
+Zwei Beispiele aus den Technischen Weisungen des BLV [@blv-tw-primaerproduktion]:
+
+- Kontrollen von Honigbienenhaltungen müssen durch amtliche Fachassistentinnen und Fachassistenten Bienen durchgeführt werden.
+- Bei der Gesundheitsüberwachung von Wassertieren muss die Tierärztin oder der Tierarzt Erfahrung mit der Gesundheit von Wassertieren haben.
+
+Das Datenmodell kennt deshalb eine Klasse Qualifikation, zum Beispiel amtliche Tierärztin oder amtlicher Tierarzt, amtliche Fachexpertin oder amtlicher Fachexperte, amtliche Fachassistentin oder amtlicher Fachassistent.
+Ein Kontrollpunkt kann eine oder mehrere Qualifikationen erfordern; erfordert er mehrere, genügt eine davon.
+Eine Qualifikation kann in einem Regelwerk festgelegt sein, zum Beispiel in der Verordnung über die Aus-, Weiter- und Fortbildung der Personen im öffentlichen Veterinärwesen.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Es ist erkennbar, ob ein Ergebnis abschliessend ist.**
+  Stellt eine Person ohne die erforderliche Qualifikation etwas fest, zum Beispiel ungepflegte Klauen bei einer Kontrolle ausserhalb des Auftrags, ist klar, dass eine qualifizierte Person nachprüfen muss (Anwendungsfall UC-17).
+- **Qualifikationen sind ein überschaubarer Katalog.**
+  Sie werden von wenigen Organisationen festgelegt und gehören deshalb wie Regelwerke und Programme zu den Referenzdaten.
+- **Die Anforderung steht beim Kontrollpunkt.**
+  Auch wenn eine Qualifikation heute für eine ganze Rubrik gilt, wird sie bei jedem Kontrollpunkt erfasst.
+  Ob Angaben für alle Kontrollpunkte eines Bereichs gelten sollen, ist eine offene Frage (@sec-open-questions).
+
+Qualifikationen haben vorerst keine Struktur.
+Dass zum Beispiel eine amtliche Tierärztin auch alles prüfen darf, was eine amtliche Fachassistentin prüfen darf, ist im Modell noch nicht abgebildet.
+
+#### Personen als schlanker Verweis
+
+Damit ersichtlich ist, wer eine Kontrolle durchgeführt und eine Beobachtung festgestellt hat, kennt das Datenmodell eine Klasse Person.
+Eine Person gehört einer oder mehreren Organisationen an und besitzt Qualifikationen.
+Sie wird nur über einen Identifikator erfasst, ohne Namen oder Adresse.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Die Qualifikation lässt sich prüfen.**
+  Nur wenn bekannt ist, welche Person eine Beobachtung festgestellt hat und welche Qualifikationen sie zu diesem Zeitpunkt besass, lässt sich beurteilen, ob das Ergebnis abschliessend ist.
+- **Personendaten bleiben geschützt.**
+  Für den Austausch von Kontrolldaten genügt ein Identifikator.
+  Namen und Kontaktangaben bleiben in den Verzeichnissen, die heute zum Beispiel das BLV, SwissGAP oder Agrosolution führen.
+- **Personen sind Stammdaten.**
+  Das Modell bildet nur ab, was für Kontrolldaten nötig ist, und überlässt die übrigen Angaben den bestehenden Verzeichnissen.
+
 ### Offene Fragen {#sec-open-questions}
 
 Die Kontrollpunkte sollen künftig neu formuliert werden.
@@ -451,7 +495,8 @@ Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
 | Auswahl Fokuskontrollpunkte | `skos:Collection` |
 | Auswahl umfasst Kontrollpunkt | `skos:member` |
 | Kontrollpunkt ersetzt Kontrollpunkt | `dcterms:replaces` |
-| Organisation, Regelwerk, Programm, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung | Klassen im Namensraum von eCH-0264 |
+| Person besitzt Qualifikation | Qualifikationsnachweis mit Gültigkeit (`schema:validFrom`, `schema:validThrough`) |
+| Organisation, Person, Qualifikation, Regelwerk, Programm, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung | Klassen im Namensraum von eCH-0264 |
 | übrige Beziehungen | Merkmale im Namensraum von eCH-0264 |
 
 : Abbildung des konzeptionellen auf das logische Datenmodell {#tbl-logical-mapping tbl-colwidths="[45,55]"}
@@ -496,6 +541,19 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Mit Versionsnummern und Ersetzungen gäbe es zwei Wege, dieselbe Änderung festzuhalten.
   Mit nur einem Weg bleiben die Daten eindeutig.
 
+
+#### Qualifikationsnachweis mit Gültigkeit
+
+Dass eine Person eine Qualifikation besitzt, wird als eigener Qualifikationsnachweis mit Gültigkeitszeitraum erfasst.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Qualifikationen können erlöschen.**
+  Amtliche Fachassistentinnen und Fachassistenten müssen sich zum Beispiel regelmässig weiterbilden.
+  Mit dem Gültigkeitszeitraum lässt sich prüfen, ob eine Person die Qualifikation zum Zeitpunkt der Beobachtung besass.
+- **Eine Beziehung allein kann keine Gültigkeit tragen.**
+  In RDF hat eine einfache Beziehung zwischen Person und Qualifikation keine eigenen Merkmale.
+  Der Qualifikationsnachweis macht die Gültigkeit erfassbar.
 
 # Haftungsausschluss {#sec-disclaimer}
 

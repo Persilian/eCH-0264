@@ -20,6 +20,8 @@ hide empty members
 
 package "Referenzdaten" as REF {
   class "Organisation" as ORG
+  class "Person" as PER
+  class "Qualifikation" as QUA
   class "Regelwerk" as RW
   class "Anforderung" as ANF
   class "Programm" as PRG
@@ -43,6 +45,10 @@ package "Referenzdaten" as REF {
   KAT -up-> ORG : herausgegeben von
   KAT *-- FKP
   FKP --> KP : umfasst
+  KP --> QUA : erfordert
+  QUA -up-> RW : festgelegt in
+  PER -up-> ORG : gehört an
+  PER --> QUA : besitzt
 }
 
 package "Transaktionsdaten" as TRX {
@@ -54,5 +60,7 @@ package "Transaktionsdaten" as TRX {
 BEO -up-> KP : betrifft
 BEO -up-> ERG : festgestelltes Ergebnis
 KON -up-> ORG : durchgeführt von\n(Kontrollstelle)
+KON -up-> PER : durchgeführt von
+BEO -up-> PER : festgestellt von
 REF -[hidden]down- TRX
 @enduml

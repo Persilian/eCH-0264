@@ -28,6 +28,16 @@ package "Referenzdaten" as REF {
     uid : xsd:string
     schema:name : rdf:langString [1..*]
   }
+  class "Person" as PER {
+    schema:identifier : xsd:string
+  }
+  class "Qualifikation" as QUA {
+    schema:name : rdf:langString [1..*]
+  }
+  class "Qualifikationsnachweis" as QN {
+    schema:validFrom : xsd:date
+    schema:validThrough : xsd:date [0..1]
+  }
   class "Regelwerk" as RW {
     schema:name : rdf:langString [1..*]
     fassung : xsd:date
@@ -107,6 +117,13 @@ package "Referenzdaten" as REF {
     derselben Rechtsnatur (SHACL-Regel).
   end note
 
+  ' Qualifikation: Kontrollpunkt erfordert Qualifikation, Person weist sie mit Gültigkeit nach
+  KP "0..*" -right-> "0..*" QUA : erfordert
+  QUA "0..*" -left-> "0..1" RW : festgelegt in
+  PER "0..*" -up-> "1..*" ORG : gehört an
+  PER "1" *-- "0..*" QN : besitzt
+  QN "0..*" --> "1" QUA : qualifikation
+
   KP -left-> "1..*" ERG : möglich
   ERG -left-> ERGW
 }
@@ -115,7 +132,6 @@ package "Transaktionsdaten" as TRX {
   ' Verweise auf Stammdaten über Identifikatoren
   class "Kontrolle" as KON {
     datum : xsd:date
-    kontrollperson : xsd:string [0..1]
     oertlicheEinheit : xsd:string
     rechtlicheEinheit : xsd:string
   }
@@ -130,6 +146,8 @@ package "Transaktionsdaten" as TRX {
 BEO -up-> KP
 BEO -up-> ERG : Ergebnis
 KON "0..*" -up-> "0..1" ORG : kontrollstelle
+KON "0..*" -up-> "1..*" PER : durchgeführt von
+BEO "0..*" -up-> "1" PER : festgestellt von
 REF -[hidden]down- TRX
 
 legend bottom right

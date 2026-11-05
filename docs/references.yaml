@@ -327,3 +327,15 @@ references:
   title: DCMI Metadata Terms
   type: report
   url: "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/"
+
+- author:
+  - literal: Bundesamt für Lebensmittelsicherheit und Veterinärwesen (BLV)
+  id: blv-tw-primaerproduktion
+  citation-label: BLV25
+  issued: 2025-11
+  publisher: Bundesamt für Lebensmittelsicherheit und Veterinärwesen (BLV)
+  title: Technische Weisungen über die amtlichen Kontrollen in der
+    Primärproduktion in Tierhaltungen (redaktionell überarbeitet am
+    25. November 2025)
+  type: report
+  url: "https://www.blv.admin.ch/dam/de/sd-web/6fbncfjomwNJ/tw-amtliche-kontrollen-primaerproduktion-2026-de.pdf"
