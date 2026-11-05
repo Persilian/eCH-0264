@@ -1,5 +1,6 @@
-' Konzeptionelles Datenmodell von eCH-0264 (handgezeichnet, wird via Makefile nach docs/de/assets/img/ gerendert (SVG))
-' Pakete: Referenzdaten und Transaktionsdaten (Kontrolldaten, die zwischen den Systemen fliessen).
+' Konzeptionelles Datenmodell von eCH-0264 (technologieneutral, wird via Makefile nach docs/de/assets/img/ gerendert (SVG))
+' Zeigt nur Klassen und benannte Beziehungen, analog zu eCH-0265; Attribute, Datentypen und Kardinalitäten
+' stehen im logischen Datenmodell (logical_model.puml).
 ' Stammdaten werden nicht modelliert; die Kontrolle verweist mit Identifikatoren (BUR-Nummer, UID) auf sie.
 @startuml
 !pragma layout smetana
@@ -14,72 +15,40 @@ skinparam classBorderColor #444444
 skinparam classBackgroundColor #FFFFFF
 skinparam packageBorderColor #999999
 skinparam packageBackgroundColor #F4F4F4
-skinparam noteBorderColor #999999
-skinparam noteBackgroundColor #FFFFFF
-skinparam classAttributeIconSize 0
-skinparam legendBorderColor #999999
-skinparam legendBackgroundColor #FFFFFF
-skinparam legendFontSize 11
 hide circle
 hide empty members
 
 package "Referenzdaten" as REF {
-  class "Anforderung" as ANF {
-    grundlage : Text
-  }
-  class "Konzept" as KZ <<skos:Concept>>
-  class "Kontrollpunkt" as KP {
-    pointID : UUID
-    name : Text 
-    beschreibung : Text
-  }
-  class "Mögliches Ergebnis" as ERG {
-    wert : Ergebniswert
-  }
-  enum "Ergebniswert" as ERGW <<enumeration>> {
-    ...
-  }
+  class "Organisation" as ORG
+  class "Regelwerk" as RW
+  class "Anforderung" as ANF
+  class "Kontrollpunkt" as KP
+  class "Mögliches Ergebnis" as ERG
+  class "Gliederungselement" as GE
+  class "Kontrollpunkt-\nkatalog" as KAT
+  class "Auswahl Fokus-\nkontrollpunkte" as FKP
 
-  ' Gliederung: ein Kontrollpunkt ist einem Konzept zugeordnet; Konzepte sind
-  ' über skos:broader beliebig tief verschachtelt (z. B. Kontrollbereich > Rubrik > Gruppe)
-  KZ "0..*" --> "0..1" KZ : skos:broader
-  KP "0..*" --> "1" KZ : zugeordnet
-
-  ANF --> KP
-  KP -right-> "1..*" ERG : möglich
-  ERG -right-> ERGW
+  RW -up-> ORG : erlassen von
+  ANF -up-> RW : stammt aus
+  KP -up-> ANF : prüft
+  KP -up-> ORG : herausgegeben von
+  KP -right-> ERG : legt fest
+  KP --> GE : zugeordnet
+  GE --> GE : übergeordnet
+  KAT --> KP : enthält
+  KAT -up-> ORG : herausgegeben von
+  KAT *-- FKP
+  FKP --> KP : umfasst
 }
 
 package "Transaktionsdaten" as TRX {
-  ' Verweise auf Stammdaten über Identifikatoren
-  class "Kontrolle" as KON {
-    datum : Datum
-    kontrollperson : Text [0..1]
-    kontrollstelle : Text [0..1]
-    oertlicheEinheit : BUR-Nr.
-    rechtlicheEinheit : UID
-  }
-  class "Tatsächliche Beobachtung" as BEO {
-    pointID : UUID
-    wert : Ergebniswert
-    bild : Bild [0..1]
-    abweichung : Text [0..1]
-  }
-  KON "1" *-right- "0..*" BEO : enthält
+  class "Kontrolle" as KON
+  class "Tatsächliche\nBeobachtung" as BEO
+  KON *-right- BEO : enthält
 }
 
-BEO -up-> KP
-BEO -up-> ERG : Ergebnis
+BEO -up-> KP : betrifft
+BEO -up-> ERG : festgestelltes Ergebnis
+KON -up-> ORG : durchgeführt von\n(Kontrollstelle)
 REF -[hidden]down- TRX
-
-legend bottom right
-  <b>Kardinalitäten</b>
-  |= Angabe |= Bedeutung |
-  | 1 | genau eins |
-  | 0..1 | keins oder eins (optional) |
-  | 0..* | keins, eins oder beliebig viele |
-  | 1..* | mindestens eins |
-  Bei Attributen in eckigen Klammern, z. B. <i>bild : Bild [0..1]</i>;
-  ohne Angabe gilt 1.
-endlegend
 @enduml
