@@ -254,6 +254,7 @@ Es unterscheidet zwei Arten von Daten:
   Gliederungselemente können einem übergeordneten Gliederungselement angehören und so beliebig tief verschachtelt werden, zum Beispiel als Kontrollbereich, Rubrik und Gruppe.
   Jede Herausgeberin veröffentlicht ihre gültigen Kontrollpunkte in einem Kontrollpunktkatalog, zum Beispiel das BLW jährlich in der Masterliste oder eine Label-Organisation bei jeder Änderung ihrer Richtlinien.
   Zu einem Katalog kann eine Auswahl der Fokuskontrollpunkte gehören.
+  Ein neuer Kontrollpunkt kann einen oder mehrere frühere Kontrollpunkte derselben Herausgeberin ersetzen.
 - **Transaktionsdaten** entstehen bei einer Kontrolle und fliessen zwischen den Systemen.
   Eine Kontrolle hält fest, wann sie stattgefunden hat, welche örtliche Einheit kontrolliert wurde und zu welcher rechtlichen Einheit diese gehört, sowie gegebenenfalls die Kontrollperson und die Organisation, die als Kontrollstelle die Kontrolle durchgeführt hat.
   Für jeden kontrollierten Kontrollpunkt wird eine tatsächliche Beobachtung mit dem festgestellten Ergebnis erfasst, bei Bedarf ergänzt mit einem Bild und einer Beschreibung der Abweichung.
@@ -368,6 +369,27 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Bund, Kantone, Label-Organisationen und künftig weitere Organisationen veröffentlichen ihre Kontrollpunkte je in einem eigenen Katalog und in ihrem eigenen Rhythmus.
   Kommt eine neue Herausgeberin hinzu, muss das Modell nicht angepasst werden.
 
+#### Ersetzung von Kontrollpunkten
+
+Herausgeberinnen ändern ihre Kontrollpunkte regelmässig, der Bund jährlich, Label-Organisationen auch unterjährig.
+Ändert sich ein Kontrollpunkt inhaltlich, entsteht ein neuer Kontrollpunkt.
+Er verweist ausdrücklich auf den Kontrollpunkt, den er ersetzt.
+Der frühere Kontrollpunkt bleibt bestehen, ist aber nicht mehr gültig.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Der Nachfolger ist eindeutig erkennbar.**
+  Heute lässt sich ein Nachfolger nur an Namensregeln erkennen, zum Beispiel an einer Endung wie «_v2» oder «_2027» in der Masterliste.
+  Ohne ausdrücklichen Verweis ist nicht klar, ob ein neuer Kontrollpunkt einen bisherigen ersetzt oder zusätzlich dazukommt.
+- **Auswertungen über mehrere Jahre bleiben möglich.**
+  Kontrollergebnisse zu einem früheren und zu einem neuen Kontrollpunkt lassen sich über die Ersetzung miteinander vergleichen.
+- **Es bleibt nachvollziehbar, was geprüft wurde.**
+  Frühere Beobachtungen verweisen weiterhin auf den Kontrollpunkt, der zum Kontrollzeitpunkt galt.
+- **Kontrollpunkte können aufgeteilt oder zusammengelegt werden.**
+  Ein neuer Kontrollpunkt kann mehrere frühere ersetzen, und mehrere neue können einen früheren ersetzen.
+
+Ein Kontrollpunkt ersetzt nur Kontrollpunkte derselben Herausgeberin.
+
 ## Logisches Datenmodell {#sec-logical-model}
 
 Das logische Datenmodell (@fig-logical-model) beschreibt, wie das konzeptionelle Datenmodell im Resource Description Framework (RDF) [@rdf] umgesetzt wird.
@@ -377,6 +399,7 @@ Hinzu kommen die Attribute, ihre Kardinalitäten sowie die verwendeten Vokabular
 
 - **SKOS** [@skos] für die Gliederung, den Katalog und die Auswahl der Fokuskontrollpunkte,
 - **schema.org** [@schemaorg] für allgemeine Merkmale wie Name, Beschreibung und Gültigkeit,
+- **Dublin Core** [@dcterms] für die Ersetzung von Kontrollpunkten (`dcterms:replaces`),
 - **XML-Schema-Datentypen** (`xsd:`) und mehrsprachige Texte (`rdf:langString`) für die Werte.
 
 Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
@@ -389,6 +412,7 @@ Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
 | Kontrollpunktkatalog enthält Kontrollpunkt | `skos:inScheme` (vom Kontrollpunkt zum Katalog) |
 | Auswahl Fokuskontrollpunkte | `skos:Collection` |
 | Auswahl umfasst Kontrollpunkt | `skos:member` |
+| Kontrollpunkt ersetzt Kontrollpunkt | `dcterms:replaces` |
 | Organisation, Regelwerk, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung | Klassen im Namensraum von eCH-0264 |
 | übrige Beziehungen | Merkmale im Namensraum von eCH-0264 |
 
@@ -419,6 +443,20 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 Dass ein Kontrollpunkt nur Anforderungen einer Rechtsnatur prüft, lässt sich in einem Klassendiagramm nicht als Kardinalität ausdrücken.
 Die Regel wird deshalb in der technischen Umsetzung als SHACL-Regel [@shacl] geprüft.
 Die Rechtsnatur wird nur beim Regelwerk erfasst und nicht beim Kontrollpunkt wiederholt, damit sich die Angaben nicht widersprechen können.
+Ebenso wird als SHACL-Regel geprüft, dass ein Kontrollpunkt nur Kontrollpunkte derselben Herausgeberin ersetzt.
+
+#### Neue Kontrollpunkte statt Versionsnummern
+
+Ein Kontrollpunkt hat keine Versionsnummer.
+Ändert sich ein Kontrollpunkt inhaltlich, erhält der neue Kontrollpunkt eine eigene IRI und verweist mit `dcterms:replaces` auf den früheren.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Eine IRI steht immer für denselben Inhalt.**
+  Eine Beobachtung, die auf einen Kontrollpunkt verweist, bezieht sich damit immer auf genau den Wortlaut, der geprüft wurde.
+- **Version und Ersetzung lassen sich nicht verwechseln.**
+  Mit Versionsnummern und Ersetzungen gäbe es zwei Wege, dieselbe Änderung festzuhalten.
+  Mit nur einem Weg bleiben die Daten eindeutig.
 
 
 # Haftungsausschluss {#sec-disclaimer}

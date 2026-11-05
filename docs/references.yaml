@@ -317,3 +317,13 @@ references:
   issued: 2026
   title: Schema.org Vocabulary
   url: "https://schema.org/"
+
+- author:
+  - literal: DCMI Usage Board
+  id: dcterms
+  citation-label: DCMI20
+  issued: 2020-01
+  publisher: Dublin Core Metadata Initiative (DCMI)
+  title: DCMI Metadata Terms
+  type: report
+  url: "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/"

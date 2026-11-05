@@ -55,7 +55,6 @@ package "Referenzdaten" as REF {
     skos:notation : xsd:string [0..1]
     schema:name : rdf:langString [1..*]
     schema:description : rdf:langString [1..*]
-    schema:version : xsd:string [0..1]
     schema:validFrom : xsd:date [0..1]
     schema:validThrough : xsd:date [0..1]
   }
@@ -86,14 +85,22 @@ package "Referenzdaten" as REF {
   KZ "0..*" --> "0..1" KZ : skos:broader
   KP "0..*" --> "1" KZ : zugeordnet
 
+  ' Ersetzung: ein neuer Kontrollpunkt ersetzt einen oder mehrere frühere Kontrollpunkte
+  KP "0..*" --> "0..*" KP : dcterms:replaces
+  note right of KP
+    Ersetzender und ersetzter
+    Kontrollpunkt haben dieselbe
+    Herausgeberin (SHACL-Regel).
+  end note
+
   note right of ANF
     Alle Anforderungen, die ein Kontrollpunkt
     prüft, stammen aus Regelwerken mit
     derselben Rechtsnatur (SHACL-Regel).
   end note
 
-  KP -right-> "1..*" ERG : möglich
-  ERG -right-> ERGW
+  KP -left-> "1..*" ERG : möglich
+  ERG -left-> ERGW
 }
 
 package "Transaktionsdaten" as TRX {

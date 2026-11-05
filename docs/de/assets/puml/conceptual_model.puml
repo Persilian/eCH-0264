@@ -32,9 +32,10 @@ package "Referenzdaten" as REF {
   ANF -up-> RW : stammt aus
   KP -up-> ANF : prüft
   KP -up-> ORG : herausgegeben von
-  KP -right-> ERG : legt fest
+  KP -down-> ERG : legt fest
   KP --> GE : zugeordnet
   GE --> GE : übergeordnet
+  KP --> KP : ersetzt
   KAT --> KP : enthält
   KAT -up-> ORG : herausgegeben von
   KAT *-- FKP
