@@ -74,6 +74,8 @@ package "Referenzdaten" as REF {
   }
   class "Mögliches Ergebnis" as ERG {
     wert : Ergebniswert
+    schema:description : rdf:langString [0..*]
+    mengeneinheit : xsd:string [0..1]
   }
   enum "Ergebniswert" as ERGW <<enumeration>> {
     ...
@@ -145,6 +147,7 @@ package "Transaktionsdaten" as TRX {
     wert : Ergebniswert
     bild : xsd:anyURI [0..1]
     abweichung : rdf:langString [0..1]
+    menge : xsd:decimal [0..1]
   }
   KON "1" *-down- "0..*" BEO : enthält
   ANM "0..*" -up-> "1" PRG : für
@@ -155,7 +158,11 @@ package "Transaktionsdaten" as TRX {
 }
 
 BEO -up-> KP
-BEO -up-> ERG : Ergebnis
+BEO "0..*" -up-> "0..1" ERG : festgestelltes Ergebnis
+note bottom of BEO
+  Ist der Wert «Mangel», ist ein vordefinierter
+  Mangel oder eine Abweichung angegeben (SHACL-Regel).
+end note
 KON "0..*" -up-> "0..1" ORG : kontrollstelle
 KON "0..*" -up-> "1..*" PER : durchgeführt von
 BEO "0..*" -up-> "1" PER : festgestellt von
