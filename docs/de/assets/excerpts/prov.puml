@@ -1,0 +1,32 @@
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam roundCorner 10
+skinparam packageStyle rectangle
+skinparam defaultFontSize 12
+skinparam Padding 3
+skinparam ArrowColor #444444
+skinparam ArrowThickness 1.2
+skinparam classBorderColor #444444
+skinparam classBackgroundColor #FFFFFF
+skinparam packageBorderColor #999999
+skinparam packageBackgroundColor #F4F4F4
+skinparam noteBorderColor #999999
+skinparam noteBackgroundColor #FFFFFF
+skinparam classAttributeIconSize 0
+skinparam legendBorderColor #999999
+skinparam legendBackgroundColor #FFFFFF
+skinparam legendFontSize 11
+hide circle
+hide empty members
+package "Transaktionsdaten" as TRX {
+  class "Tatsächliche Beobachtung" as BEO {
+    wert : Ergebniswert
+    bild : xsd:anyURI [0..1]
+    abweichung : rdf:langString [0..1]
+    menge : xsd:decimal [0..1]
+  }
+}
+BEO "0..1" --> "0..1" BEO : prov:wasRevisionOf
+BEO "0..*" --> "0..1" BEO : folgtAuf
+@enduml

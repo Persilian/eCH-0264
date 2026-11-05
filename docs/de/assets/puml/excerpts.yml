@@ -1,0 +1,71 @@
+# Ausschnitte aus den Datenmodellen für die Modellierungsentscheide.
+# generate_excerpts.py erzeugt daraus PlantUML-Dateien und SVGs in
+# docs/de/assets/excerpts/. Nach jeder Änderung an einem Modell oder an dieser
+# Datei ausführen und die erzeugten Dateien committen:
+#   venv/bin/python docs/de/assets/puml/generate_excerpts.py
+# "classes" sind die PlantUML-Aliase aus dem jeweiligen Modell, "skip" blendet
+# Beziehungen mit diesen Bezeichnungen aus, "notes: false" die Notizen.
+
+# Konzeptionelles Datenmodell (Kapitel 4.1)
+gliederung:
+  source: conceptual_model.puml
+  classes: [KP, GE]
+  skip: [ersetzt]
+herkunft:
+  source: conceptual_model.puml
+  classes: [ORG, RW, ANF, KP]
+  skip: [ersetzt]
+programm:
+  source: conceptual_model.puml
+  classes: [RW, PRG, ANF, KP]
+  skip: [ersetzt]
+anmeldung:
+  source: conceptual_model.puml
+  classes: [PRG, ANF, ANM]
+organisation:
+  source: conceptual_model.puml
+  classes: [ORG, RW, KP, KAT, PER, KON]
+  skip: [enthält, ersetzt]
+katalog:
+  source: conceptual_model.puml
+  classes: [ORG, KAT, FKP, KP]
+  skip: [ersetzt]
+ersetzung:
+  source: conceptual_model.puml
+  classes: [ORG, KP]
+qualifikation:
+  source: conceptual_model.puml
+  classes: [RW, KP, QUA, PER]
+  skip: [ersetzt]
+person:
+  source: conceptual_model.puml
+  classes: [ORG, PER, QUA, KON, BEO]
+  skip: [korrigiert, folgt auf]
+korrektur:
+  source: conceptual_model.puml
+  classes: [KON, BEO]
+maengel:
+  source: conceptual_model.puml
+  classes: [KP, ERG, KON, BEO]
+  skip: [ersetzt, korrigiert, folgt auf]
+
+# Logisches Datenmodell (Kapitel 4.2)
+skos:
+  source: logical_model.puml
+  classes: [KP, KZ, KAT, FKP]
+  notes: false
+  skip: ["dcterms:replaces"]
+pruefregeln:
+  source: logical_model.puml
+  classes: [RW, RN, ANF, KP, ORG]
+versionen:
+  source: logical_model.puml
+  classes: [KP]
+  notes: false
+qualifikationsnachweis:
+  source: logical_model.puml
+  classes: [PER, QN, QUA]
+prov:
+  source: logical_model.puml
+  classes: [BEO]
+  notes: false

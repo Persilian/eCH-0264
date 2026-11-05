@@ -1,0 +1,66 @@
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam roundCorner 10
+skinparam packageStyle rectangle
+skinparam defaultFontSize 12
+skinparam Padding 3
+skinparam ArrowColor #444444
+skinparam ArrowThickness 1.2
+skinparam classBorderColor #444444
+skinparam classBackgroundColor #FFFFFF
+skinparam packageBorderColor #999999
+skinparam packageBackgroundColor #F4F4F4
+skinparam noteBorderColor #999999
+skinparam noteBackgroundColor #FFFFFF
+skinparam classAttributeIconSize 0
+skinparam legendBorderColor #999999
+skinparam legendBackgroundColor #FFFFFF
+skinparam legendFontSize 11
+hide circle
+hide empty members
+package "Referenzdaten" as REF {
+  class "Regelwerk" as RW {
+    schema:name : rdf:langString [1..*]
+    fassung : xsd:date
+    rechtsnatur : Rechtsnatur
+    schema:url : xsd:anyURI [0..1]
+  }
+  enum "Rechtsnatur" as RN <<enumeration>> {
+    öffentlich-rechtlich
+    privatrechtlich
+  }
+  class "Anforderung" as ANF {
+    schema:description : rdf:langString [1..*]
+    fundstelle : xsd:string [0..1]
+  }
+  class "Kontrollpunkt" as KP {
+    schema:identifier : xsd:string
+    skos:notation : xsd:string [0..1]
+    schema:name : rdf:langString [1..*]
+    schema:description : rdf:langString [1..*]
+    schema:validFrom : xsd:date [0..1]
+    schema:validThrough : xsd:date [0..1]
+  }
+  class "Organisation" as ORG {
+    uid : xsd:string
+    schema:name : rdf:langString [1..*]
+  }
+}
+RW "0..*" -up-> "1" ORG : erlassen von
+RW -right-> RN
+ANF "1..*" -up-> "1" RW : stammt aus
+KP "0..*" -up-> "1..*" ANF : prüft
+KP "0..*" -up-> "1" ORG : herausgeberin
+KP "0..*" --> "0..*" KP : dcterms:replaces
+note right of KP
+  Ersetzender und ersetzter
+  Kontrollpunkt haben dieselbe
+  Herausgeberin (SHACL-Regel).
+end note
+note right of ANF
+  Alle Anforderungen, die ein Kontrollpunkt
+  prüft, stammen aus Regelwerken mit
+  derselben Rechtsnatur (SHACL-Regel).
+end note
+@enduml

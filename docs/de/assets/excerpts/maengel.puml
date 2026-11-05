@@ -1,0 +1,28 @@
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam roundCorner 10
+skinparam packageStyle rectangle
+skinparam defaultFontSize 12
+skinparam Padding 3
+skinparam ArrowColor #444444
+skinparam ArrowThickness 1.2
+skinparam classBorderColor #444444
+skinparam classBackgroundColor #FFFFFF
+skinparam packageBorderColor #999999
+skinparam packageBackgroundColor #F4F4F4
+hide circle
+hide empty members
+package "Referenzdaten" as REF {
+  class "Kontrollpunkt" as KP
+  class "Mögliches Ergebnis" as ERG
+}
+package "Transaktionsdaten" as TRX {
+  class "Kontrolle" as KON
+  class "Tatsächliche\nBeobachtung" as BEO
+}
+KP -down-> ERG : legt fest
+KON *-down- BEO : enthält
+BEO -up-> KP : betrifft
+BEO -up-> ERG : festgestelltes Ergebnis
+@enduml
