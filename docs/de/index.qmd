@@ -262,6 +262,7 @@ Es unterscheidet zwei Arten von Daten:
   Eine Kontrolle hält fest, wann sie stattgefunden hat, welche örtliche Einheit kontrolliert wurde und zu welcher rechtlichen Einheit diese gehört, welche Personen sie durchgeführt haben und gegebenenfalls welche Organisation als Kontrollstelle beauftragt war.
   Für jeden kontrollierten Kontrollpunkt wird eine tatsächliche Beobachtung mit dem festgestellten Ergebnis erfasst, bei Bedarf ergänzt mit einem Bild und einer Beschreibung der Abweichung.
   Jede Beobachtung hält fest, welche Person sie festgestellt hat.
+  Eine Beobachtung kann eine falsch erfasste Beobachtung korrigieren oder auf eine frühere Beobachtung folgen, zum Beispiel bei einer Nachkontrolle.
 
 Stammdaten werden nicht modelliert, mit Ausnahme einer schlanken Person ohne Namen (@sec-modelling-decisions).
 Die Kontrolle verweist auf die örtliche Einheit mit der Nummer des Betriebs- und Unternehmensregisters (BUR-Nummer) [@bur; @digiagrifood-stammdaten] und auf die rechtliche Einheit mit der Unternehmens-Identifikationsnummer (UID) [@uid-register].
@@ -458,6 +459,28 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 - **Personen sind Stammdaten.**
   Das Modell bildet nur ab, was für Kontrolldaten nötig ist, und überlässt die übrigen Angaben den bestehenden Verzeichnissen.
 
+#### Korrektur und Folgebeobachtung
+
+Eine Beobachtung kann auf eine andere Beobachtung verweisen.
+Das Datenmodell unterscheidet dabei zwei Fälle:
+
+- **Korrektur:** Eine Beobachtung war falsch erfasst und wird berichtigt.
+  Die neue Beobachtung korrigiert die alte.
+  Die alte bleibt erhalten, gilt aber nicht mehr.
+- **Folgebeobachtung:** Eine spätere Beobachtung baut auf einer früheren auf, zum Beispiel eine Nachkontrolle, ob ein Mangel behoben wurde, oder die abschliessende Beurteilung durch eine Tierärztin nach der Feststellung einer Fachassistentin.
+  Die frühere Beobachtung bleibt gültig.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Korrektur und Nachkontrolle bedeuten Verschiedenes.**
+  Bei einer Korrektur hat der festgestellte Mangel nie bestanden, bei einer Nachkontrolle wurde er behoben.
+  Für Auswertungen ist dieser Unterschied entscheidend, deshalb gibt es zwei Beziehungen statt einer.
+- **Nichts wird gelöscht.**
+  Auch korrigierte Beobachtungen bleiben erhalten.
+  So bleibt nachvollziehbar, was wann erfasst und geändert wurde.
+- **Abschliessende Beurteilungen lassen sich verfolgen.**
+  Stellt eine Person ohne die erforderliche Qualifikation etwas fest, verweist die Beurteilung der qualifizierten Person auf diese erste Beobachtung.
+
 ### Offene Fragen {#sec-open-questions}
 
 Die Kontrollpunkte sollen künftig neu formuliert werden.
@@ -482,6 +505,7 @@ Hinzu kommen die Attribute, ihre Kardinalitäten sowie die verwendeten Vokabular
 - **SKOS** [@skos] für die Gliederung, den Katalog und die Auswahl der Fokuskontrollpunkte,
 - **schema.org** [@schemaorg] für allgemeine Merkmale wie Name, Beschreibung und Gültigkeit,
 - **Dublin Core** [@dcterms] für die Ersetzung von Kontrollpunkten (`dcterms:replaces`),
+- **PROV-O** [@prov-o] für die Korrektur von Beobachtungen (`prov:wasRevisionOf`),
 - **XML-Schema-Datentypen** (`xsd:`) und mehrsprachige Texte (`rdf:langString`) für die Werte.
 
 Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
@@ -495,6 +519,8 @@ Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
 | Auswahl Fokuskontrollpunkte | `skos:Collection` |
 | Auswahl umfasst Kontrollpunkt | `skos:member` |
 | Kontrollpunkt ersetzt Kontrollpunkt | `dcterms:replaces` |
+| Beobachtung korrigiert Beobachtung | `prov:wasRevisionOf` |
+| Beobachtung folgt auf Beobachtung | `folgtAuf` (Namensraum von eCH-0264) |
 | Person besitzt Qualifikation | Qualifikationsnachweis mit Gültigkeit (`schema:validFrom`, `schema:validThrough`) |
 | Organisation, Person, Qualifikation, Regelwerk, Programm, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung | Klassen im Namensraum von eCH-0264 |
 | übrige Beziehungen | Merkmale im Namensraum von eCH-0264 |
@@ -554,6 +580,20 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
 - **Eine Beziehung allein kann keine Gültigkeit tragen.**
   In RDF hat eine einfache Beziehung zwischen Person und Qualifikation keine eigenen Merkmale.
   Der Qualifikationsnachweis macht die Gültigkeit erfassbar.
+
+#### PROV-O für Korrekturen, eigenes Merkmal für Folgebeobachtungen
+
+Eine Korrektur wird mit `prov:wasRevisionOf` aus PROV-O [@prov-o] erfasst.
+Für die Folgebeobachtung verwendet das Modell ein eigenes Merkmal `folgtAuf` im Namensraum von eCH-0264.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **PROV-O beschreibt Überarbeitungen.**
+  `prov:wasRevisionOf` bedeutet, dass etwas eine überarbeitete Fassung von etwas anderem ist.
+  Das passt genau auf eine Korrektur.
+- **Für Folgebeobachtungen gibt es kein passendes Standardmerkmal.**
+  Eine Nachkontrolle ist keine Überarbeitung der früheren Beobachtung, sondern eine neue Feststellung.
+  Ein eigenes Merkmal verhindert, dass ein Standardmerkmal in einer anderen Bedeutung verwendet wird.
 
 # Haftungsausschluss {#sec-disclaimer}
 

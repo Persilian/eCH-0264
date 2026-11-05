@@ -339,3 +339,18 @@ references:
     25. November 2025)
   type: report
   url: "https://www.blv.admin.ch/dam/de/sd-web/6fbncfjomwNJ/tw-amtliche-kontrollen-primaerproduktion-2026-de.pdf"
+
+- author:
+  - family: Lebo
+    given: Timothy
+  - family: Sahoo
+    given: Satya
+  - family: McGuinness
+    given: Deborah
+  genre: W3C Recommendation
+  id: prov-o
+  issued: 2013-04
+  publisher: World Wide Web Consortium (W3C)
+  title: "PROV-O: The PROV Ontology"
+  type: report
+  url: "https://www.w3.org/TR/prov-o/"

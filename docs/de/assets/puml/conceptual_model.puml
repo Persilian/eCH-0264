@@ -54,7 +54,9 @@ package "Referenzdaten" as REF {
 package "Transaktionsdaten" as TRX {
   class "Kontrolle" as KON
   class "Tatsächliche\nBeobachtung" as BEO
-  KON *-right- BEO : enthält
+  KON *-down- BEO : enthält
+  BEO --> BEO : korrigiert
+  BEO --> BEO : folgt auf
 }
 
 BEO -up-> KP : betrifft

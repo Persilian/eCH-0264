@@ -140,7 +140,11 @@ package "Transaktionsdaten" as TRX {
     bild : xsd:anyURI [0..1]
     abweichung : rdf:langString [0..1]
   }
-  KON "1" *-right- "0..*" BEO : enthält
+  KON "1" *-down- "0..*" BEO : enthält
+  ' Korrektur: berichtigt eine falsch erfasste Beobachtung, die nicht mehr gilt
+  BEO "0..1" --> "0..1" BEO : prov:wasRevisionOf
+  ' Folgebeobachtung: z. B. Nachkontrolle oder abschliessende Beurteilung; die frühere bleibt gültig
+  BEO "0..*" --> "0..1" BEO : folgtAuf
 }
 
 BEO -up-> KP
