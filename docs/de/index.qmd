@@ -239,28 +239,37 @@ Es baut auf den Begriffen des Fachglossars (@sec-glossary) auf und leitet sich a
 
 ## Konzeptionelles Datenmodell {#sec-conceptual-model}
 
-Das konzeptionelle Datenmodell (@fig-conceptual-model) unterscheidet zwei Arten von Daten:
+Das konzeptionelle Datenmodell (@fig-conceptual-model) beschreibt die Geschäftsobjekte unabhängig von einer Technologie.
+Es richtet sich an Fachpersonen, verwendet die Begriffe des Fachglossars und zeigt nur die Geschäftsobjekte und ihre Beziehungen.
+Attribute, Datentypen und Kardinalitäten beschreibt das logische Datenmodell (@sec-logical-model).
+Es unterscheidet zwei Arten von Daten:
 
 - **Referenzdaten** legen fest, was kontrolliert wird.
-  Jeder Kontrollpunkt ist einem Konzept (`skos:Concept`) zugeordnet.
-  Konzepte verweisen über `skos:broader` auf ein übergeordnetes Konzept und können so beliebig tief verschachtelt werden, zum Beispiel als Kontrollbereich, Rubrik und Gruppe.
-  Jeder Kontrollpunkt stützt sich auf Anforderungen und legt mindestens ein mögliches Ergebnis fest.
+  Eine Organisation erlässt ein Regelwerk, zum Beispiel eine Verordnung oder eine Label-Richtlinie, in einer bestimmten Fassung.
+  Ein Regelwerk ist öffentlich-rechtlich oder privatrechtlich und enthält Anforderungen.
+  Ein Kontrollpunkt prüft eine oder mehrere Anforderungen und wird von einer Organisation herausgegeben.
+  Alle Anforderungen eines Kontrollpunkts stammen aus Regelwerken mit derselben Rechtsnatur.
+  Der Kontrollpunkt legt mindestens ein mögliches Ergebnis fest.
+  Jeder Kontrollpunkt ist einem Gliederungselement zugeordnet.
+  Gliederungselemente können einem übergeordneten Gliederungselement angehören und so beliebig tief verschachtelt werden, zum Beispiel als Kontrollbereich, Rubrik und Gruppe.
+  Jede Herausgeberin veröffentlicht ihre gültigen Kontrollpunkte in einem Kontrollpunktkatalog, zum Beispiel das BLW jährlich in der Masterliste oder eine Label-Organisation bei jeder Änderung ihrer Richtlinien.
+  Zu einem Katalog kann eine Auswahl der Fokuskontrollpunkte gehören.
 - **Transaktionsdaten** entstehen bei einer Kontrolle und fliessen zwischen den Systemen.
-  Eine Kontrolle hält fest, wann sie stattgefunden hat, welche örtliche Einheit kontrolliert wurde und zu welcher rechtlichen Einheit diese gehört, sowie gegebenenfalls die Kontrollperson und die Kontrollstelle.
+  Eine Kontrolle hält fest, wann sie stattgefunden hat, welche örtliche Einheit kontrolliert wurde und zu welcher rechtlichen Einheit diese gehört, sowie gegebenenfalls die Kontrollperson und die Organisation, die als Kontrollstelle die Kontrolle durchgeführt hat.
   Für jeden kontrollierten Kontrollpunkt wird eine tatsächliche Beobachtung mit dem festgestellten Ergebnis erfasst, bei Bedarf ergänzt mit einem Bild und einer Beschreibung der Abweichung.
 
 Stammdaten werden nicht modelliert.
-Die Kontrolle verweist auf die örtliche Einheit mit der BUR-Nummer und auf die rechtliche Einheit mit der Unternehmens-Identifikationsnummer (UID).
+Die Kontrolle verweist auf die örtliche Einheit mit der Nummer des Betriebs- und Unternehmensregisters (BUR-Nummer) [@bur; @digiagrifood-stammdaten] und auf die rechtliche Einheit mit der Unternehmens-Identifikationsnummer (UID) [@uid-register].
 
 ![Konzeptionelles Datenmodell](assets/img/conceptual_model.svg){#fig-conceptual-model width="80%"}
 
 ### Modellierungsentscheide {#sec-modelling-decisions}
 
-#### Gliederung der Kontrollpunkte mit `skos:Concept`
+#### Gliederung der Kontrollpunkte in einem Baum
 
 Kontrollpunkte werden heute in Kontrollbereiche, Rubriken und Gruppen gegliedert.
 Das Datenmodell bildet diese Ebenen nicht als eigene Klassen ab.
-Stattdessen ist jeder Kontrollpunkt einem Konzept zugeordnet, und jedes Konzept kann einem übergeordneten Konzept angehören.
+Stattdessen ist jeder Kontrollpunkt einem Gliederungselement zugeordnet, und jedes Gliederungselement kann einem übergeordneten Gliederungselement angehören.
 So entsteht ein Baum, der beliebig viele Ebenen haben kann.
 
 Wir haben uns aus folgenden Gründen dafür entschieden:
@@ -270,19 +279,146 @@ Wir haben uns aus folgenden Gründen dafür entschieden:
   Manche haben mehr, andere weniger, manche nennen sie anders.
   Mit einer einzigen, verschachtelbaren Struktur passen alle Kataloge ins gleiche Modell, ohne dass es geändert werden muss.
 - **Das Modell wird einfacher.**
-  Ein Kontrollpunkt hängt immer an genau einem Konzept.
+  Ein Kontrollpunkt hängt immer an genau einem Gliederungselement.
   Es braucht keine Sonderregel mehr, ob er in einer Gruppe oder direkt in einer Rubrik liegt.
-- **Kontrollpunkte verschiedener Kataloge lassen sich verknüpfen.**
-  Mit SKOS kann man festhalten, dass ein Punkt eines privaten Labels einem Punkt des Bundes entspricht.
-  Das ist eine Voraussetzung, damit Kontrolldaten zwischen den Systemen weiterverwendet werden können.
-- **SKOS ist ein bewährter Standard.**
-  Er bietet Bezeichnungen in mehreren Sprachen, Codes und Versionen bereits an.
-  Auch das Fachglossar (@sec-glossary) ist mit SKOS modelliert.
 
 Dafür sind die Ebenen im Modell nicht mehr fest benannt.
 Regeln, die nur für eine bestimmte Ebene gelten, werden erst in der technischen Umsetzung festgelegt.
 
+#### Herkunft der Anforderungen mit Regelwerk und Organisation
+
+Heute ist bei vielen Kontrollpunkten nicht klar erkennbar, welche Anforderungen sie prüfen und woher diese stammen.
+Das Datenmodell trennt deshalb drei Fragen:
+
+- **Woher kommt die Anforderung?**
+  Jede Anforderung stammt aus einem Regelwerk.
+  Das Regelwerk hat eine Fassung, eine Rechtsnatur (öffentlich-rechtlich oder privatrechtlich) und wird von einer Organisation erlassen.
+- **Wer hat den Kontrollpunkt formuliert?**
+  Jeder Kontrollpunkt hat eine Organisation als Herausgeberin.
+- **Was prüft der Kontrollpunkt?**
+  Ein Kontrollpunkt verweist auf die Anforderungen, die er prüft.
+  Ein Kontrollpunkt vermischt nie öffentlich-rechtliche und privatrechtliche Anforderungen.
+  Alle seine Anforderungen stammen deshalb aus Regelwerken mit derselben Rechtsnatur.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Die Quelle wird nur einmal erfasst.**
+  Viele Anforderungen stammen aus dem gleichen Regelwerk.
+  Wäre die Quelle ein Text bei jeder Anforderung, müsste sie hundertfach wiederholt werden, und Tippfehler wären unvermeidlich.
+- **Es ist nachvollziehbar, was zum Kontrollzeitpunkt galt.**
+  Regelwerke werden mit ihrer Fassung erfasst.
+- **Öffentliches und privates Recht sind klar unterscheidbar.**
+  Das ist wichtig, weil für die Weitergabe der Daten unterschiedliche Regeln gelten.
+  Die Rechtsnatur eines Kontrollpunkts muss nicht separat erfasst werden, sie ergibt sich aus seinen Anforderungen.
+- **Kontrollpunkte verschiedener Herausgeberinnen werden vergleichbar.**
+  Prüfen zwei Kontrollpunkte die gleiche Anforderung, zum Beispiel ein Kontrollpunkt des Bundes und ein kantonsspezifischer Kontrollpunkt, ist das im Modell sichtbar.
+
+#### Eine Klasse Organisation für alle Rollen
+
+Organisationen haben im Kontrollwesen verschiedene Rollen: Sie erlassen Regelwerke, geben Kontrollpunkte heraus oder führen als Kontrollstelle Kontrollen durch.
+Das Datenmodell kennt dafür nur eine Klasse Organisation.
+Welche Rolle eine Organisation hat, ergibt sich aus der Beziehung, zum Beispiel «Herausgeberin» beim Kontrollpunkt oder «Kontrollstelle» bei der Kontrolle.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Dieselbe Organisation kann mehrere Rollen haben.**
+  Ein kantonales Veterinäramt gibt zum Beispiel eigene Kontrollpunkte heraus und führt auch Kontrollen durch.
+  Mit einer einzigen Klasse wird es nur einmal erfasst.
+- **Neue Rollen brauchen keine neue Klasse.**
+  Kommt eine Rolle hinzu, zum Beispiel Zertifizierungsstelle, genügt eine neue Beziehung.
+- **Die Kontrollstelle ist kein freier Text mehr.**
+  Die Kontrolle verweist auf eine Organisation, statt deren Namen als Text zu erfassen.
+
+Organisationen werden über die Unternehmens-Identifikationsnummer (UID) identifiziert [@uid-register].
+Alle Organisationen im Kontrollwesen haben eine UID, auch Bundesämter, kantonale Ämter und Vereine.
+
+#### Kontrollpunktkataloge der Herausgeberinnen
+
+Die Herausgeberinnen ändern ihre Kontrollpunkte in unterschiedlichem Rhythmus:
+
+- **Bund:** Das BLW veröffentlicht die Kontrollpunkte und Fokuskontrollpunkte des Bundes jeweils Ende August für das Folgejahr (Art. 9 Abs. 2 VKKL [@vkkl]).
+  Dabei übernimmt es auch die Fokuskontrollpunkte des BLV zum Tierschutz.
+  Sie gelten jeweils ab dem 1. Januar.
+- **Label-Organisationen:** Sie passen ihre Richtlinien und damit ihre Kontrollpunkte deutlich häufiger an, auch unterjährig (@sec-control-point-hierarchy).
+  Häufig handelt es sich um Lockerungen, befristete Ausnahmen oder die Aufhebung einzelner Anforderungen.
+
+Das Datenmodell bildet beides gleich ab: Jede Herausgeberin veröffentlicht ihre gültigen Kontrollpunkte in einem Kontrollpunktkatalog.
+Ein Katalog hat ein Publikationsdatum und einen Gültigkeitszeitraum.
+Ändert eine Herausgeberin ihre Kontrollpunkte, veröffentlicht sie eine neue Ausgabe ihres Katalogs, beim BLW einmal im Jahr, bei einer Label-Organisation so oft wie nötig.
+Zu einem Katalog kann eine Auswahl der Fokuskontrollpunkte gehören, die bei einer Grundkontrolle zwingend geprüft werden müssen.
+Heute gibt es solche Auswahlen nur im Katalog des Bundes, gestützt auf die VKKL.
+Ob ein Kontrollpunkt ein Fokuskontrollpunkt ist, ist also kein Merkmal des Kontrollpunkts selbst.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **Ein Modell für alle Rhythmen.**
+  Der Katalog ist nicht an das Kalenderjahr gebunden.
+  Jährliche und unterjährige Änderungen werden auf die gleiche Weise ausgetauscht.
+- **Nachvollziehbar, was zum Kontrollzeitpunkt galt.**
+  Kontrollpunkte und Kataloge haben einen Gültigkeitszeitraum.
+  Auch bei unterjährigen Änderungen ist für jede Kontrolle klar, welche Fassung eines Kontrollpunkts geprüft wurde.
+- **Unveränderte Kontrollpunkte bleiben bestehen.**
+  Eine neue Ausgabe eines Katalogs enthält auch die Kontrollpunkte, die sich nicht geändert haben.
+  Sie erhalten keine neue Version, nur weil sich andere Kontrollpunkte oder die Auswahl der Fokuskontrollpunkte geändert haben.
+- **Die Kantone erhalten alles in einer Lieferung.**
+  Die kantonale Kontrollkoordinationsstelle braucht die gültigen Kontrollpunkte und die Fokuskontrollpunkte, um die Grundkontrollen in Kontrollpakete aufzuteilen.
+  Beides ist im gleichen Katalog enthalten.
+- **Das Modell ist offen für weitere Herausgeberinnen.**
+  Grundsätzlich kann jede Organisation Kontrollpunkte herausgeben.
+  Bund, Kantone, Label-Organisationen und künftig weitere Organisationen veröffentlichen ihre Kontrollpunkte je in einem eigenen Katalog und in ihrem eigenen Rhythmus.
+  Kommt eine neue Herausgeberin hinzu, muss das Modell nicht angepasst werden.
+
 ## Logisches Datenmodell {#sec-logical-model}
+
+Das logische Datenmodell (@fig-logical-model) beschreibt, wie das konzeptionelle Datenmodell im Resource Description Framework (RDF) [@rdf] umgesetzt wird.
+Es richtet sich an Personen, die Systeme entwickeln oder Daten austauschen.
+Die Klassen und Beziehungen entsprechen dem konzeptionellen Datenmodell.
+Hinzu kommen die Attribute, ihre Kardinalitäten sowie die verwendeten Vokabulare und Datentypen:
+
+- **SKOS** [@skos] für die Gliederung, den Katalog und die Auswahl der Fokuskontrollpunkte,
+- **schema.org** [@schemaorg] für allgemeine Merkmale wie Name, Beschreibung und Gültigkeit,
+- **XML-Schema-Datentypen** (`xsd:`) und mehrsprachige Texte (`rdf:langString`) für die Werte.
+
+Merkmale ohne Präfix werden im Namensraum von eCH-0264 definiert.
+
+| Konzeptionelles Datenmodell | Logisches Datenmodell |
+|---|---|
+| Gliederungselement | `skos:Concept` |
+| Gliederungselement übergeordnet | `skos:broader` |
+| Kontrollpunktkatalog | `skos:ConceptScheme` |
+| Kontrollpunktkatalog enthält Kontrollpunkt | `skos:inScheme` (vom Kontrollpunkt zum Katalog) |
+| Auswahl Fokuskontrollpunkte | `skos:Collection` |
+| Auswahl umfasst Kontrollpunkt | `skos:member` |
+| Organisation, Regelwerk, Anforderung, Kontrollpunkt, Mögliches Ergebnis, Kontrolle, Tatsächliche Beobachtung | Klassen im Namensraum von eCH-0264 |
+| übrige Beziehungen | Merkmale im Namensraum von eCH-0264 |
+
+: Abbildung des konzeptionellen auf das logische Datenmodell {#tbl-logical-mapping tbl-colwidths="[45,55]"}
+
+![Logisches Datenmodell](assets/img/logical_model.svg){#fig-logical-model width="80%"}
+
+### Modellierungsentscheide {#sec-logical-modelling-decisions}
+
+#### SKOS für Gliederung, Katalog und Fokuskontrollpunkte
+
+Die Gliederungselemente werden als `skos:Concept` umgesetzt und über `skos:broader` verschachtelt.
+Ein Kontrollpunktkatalog ist ein `skos:ConceptScheme`, die Auswahl der Fokuskontrollpunkte eine `skos:Collection`.
+
+Wir haben uns aus folgenden Gründen dafür entschieden:
+
+- **SKOS ist ein bewährter Standard.**
+  SKOS [@skos] ist eine Empfehlung des W3C für Begriffssysteme und Klassifikationen.
+  Es bietet Bezeichnungen in mehreren Sprachen, Codes (`skos:notation`) und Gruppierungen (`skos:Collection`) bereits an.
+- **Kontrollpunkte verschiedener Kataloge lassen sich verknüpfen.**
+  Mit SKOS kann man festhalten, dass ein Punkt eines Katalogs einem Punkt eines anderen Katalogs entspricht (`skos:exactMatch`, `skos:closeMatch`).
+  Das ist eine Voraussetzung, damit Kontrolldaten zwischen den Systemen weiterverwendet werden können.
+- **Das Fachglossar verwendet ebenfalls SKOS.**
+  Das Fachglossar (@sec-glossary) ist als SKOS-Konzeptschema modelliert, die Daten bleiben dadurch einheitlich.
+
+#### Gleiche Rechtsnatur als Prüfregel
+
+Dass ein Kontrollpunkt nur Anforderungen einer Rechtsnatur prüft, lässt sich in einem Klassendiagramm nicht als Kardinalität ausdrücken.
+Die Regel wird deshalb in der technischen Umsetzung als SHACL-Regel [@shacl] geprüft.
+Die Rechtsnatur wird nur beim Regelwerk erfasst und nicht beim Kontrollpunkt wiederholt, damit sich die Angaben nicht widersprechen können.
 
 
 # Haftungsausschluss {#sec-disclaimer}
